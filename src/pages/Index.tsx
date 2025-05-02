@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -7,6 +6,9 @@ import HowItWorksStep from '@/components/sections/HowItWorksStep';
 import { Button } from '@/components/ui/button';
 import { Users, PieChart, Vote, Shield, ArrowRight, Briefcase, Trophy, BarChart, BookOpen } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import defiFundamentals from '@/assets/svg/defi-fundamentals.svg';
+import investmentStrategies from '@/assets/svg/investment-strategies.svg';
+import defaultAvatar from '@/assets/svg/default-avatar.svg';
 
 const Index = () => {
   return (
@@ -399,21 +401,21 @@ const Index = () => {
       </section>
       
       {/* Community Section */}
-      <section id="community" className="py-20 px-6 bg-gradient-to-br from-dao-purple to-dao-darkPurple text-white">
+      <section className="py-20 px-6 bg-dao-purple">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-6">Join Our Growing Community</h2>
+              <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">Join Our Growing Community</h2>
               <p className="text-white/80 text-lg mb-8">
                 Connect with other investors, share insights, and participate in the future of decentralized investing.
               </p>
               <div className="grid grid-cols-2 gap-4 mb-8">
                 <div className="bg-white/10 p-6 rounded-xl">
-                  <div className="text-3xl font-bold mb-2">500+</div>
+                  <div className="text-3xl font-bold mb-2 text-white">500+</div>
                   <div className="text-white/70">Active Members</div>
                 </div>
                 <div className="bg-white/10 p-6 rounded-xl">
-                  <div className="text-3xl font-bold mb-2">$2.5M</div>
+                  <div className="text-3xl font-bold mb-2 text-white">$2.5M</div>
                   <div className="text-white/70">Total Invested</div>
                 </div>
               </div>
@@ -425,26 +427,26 @@ const Index = () => {
             <div className="bg-white/10 p-8 rounded-3xl">
               <div className="space-y-4">
                 <div className="flex items-center space-x-4 bg-white/10 p-4 rounded-xl">
-                  <div className="w-10 h-10 rounded-full bg-white/20"></div>
+                  <img src={defaultAvatar} alt="Member Avatar" className="w-10 h-10 rounded-full" />
                   <div className="flex-1">
                     <div className="text-sm text-white/70">Just funded</div>
-                    <div className="font-medium">Tech Startup Investment Pool</div>
+                    <div className="font-medium text-white">Tech Startup Investment Pool</div>
                   </div>
                   <div className="text-white/80">$125K</div>
                 </div>
                 <div className="flex items-center space-x-4 bg-white/10 p-4 rounded-xl">
-                  <div className="w-10 h-10 rounded-full bg-white/20"></div>
+                  <img src={defaultAvatar} alt="Member Avatar" className="w-10 h-10 rounded-full" />
                   <div className="flex-1">
                     <div className="text-sm text-white/70">New proposal</div>
-                    <div className="font-medium">Green Energy Fund</div>
+                    <div className="font-medium text-white">Green Energy Fund</div>
                   </div>
                   <div className="text-white/80">Voting</div>
                 </div>
                 <div className="flex items-center space-x-4 bg-white/10 p-4 rounded-xl">
-                  <div className="w-10 h-10 rounded-full bg-white/20"></div>
+                  <img src={defaultAvatar} alt="Member Avatar" className="w-10 h-10 rounded-full" />
                   <div className="flex-1">
                     <div className="text-sm text-white/70">Return distributed</div>
-                    <div className="font-medium">Real Estate Project</div>
+                    <div className="font-medium text-white">Real Estate Project</div>
                   </div>
                   <div className="text-white/80">+12%</div>
                 </div>
@@ -466,7 +468,9 @@ const Index = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="border border-slate-200 rounded-xl overflow-hidden hover:shadow-md transition-shadow">
-              <div className="h-48 bg-slate-100"></div>
+              <div className="h-48">
+                <img src={defiFundamentals} alt="DeFi Fundamentals" className="w-full h-full object-cover" />
+              </div>
               <div className="p-6">
                 <h3 className="text-xl font-bold mb-2">DeFi Fundamentals</h3>
                 <p className="text-slate-600 mb-4">Learn the basics of decentralized finance, protocols, and yield generation strategies.</p>
@@ -477,21 +481,12 @@ const Index = () => {
             </div>
             
             <div className="border border-slate-200 rounded-xl overflow-hidden hover:shadow-md transition-shadow">
-              <div className="h-48 bg-slate-100"></div>
+              <div className="h-48">
+                <img src={investmentStrategies} alt="Investment Strategies" className="w-full h-full object-cover" />
+              </div>
               <div className="p-6">
                 <h3 className="text-xl font-bold mb-2">Investment Strategies</h3>
                 <p className="text-slate-600 mb-4">Discover various investment approaches from HODL to active yield farming techniques.</p>
-                <Button variant="outline" className="w-full border-dao-purple text-dao-purple">
-                  Read More
-                </Button>
-              </div>
-            </div>
-            
-            <div className="border border-slate-200 rounded-xl overflow-hidden hover:shadow-md transition-shadow">
-              <div className="h-48 bg-slate-100"></div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-2">DAO Governance</h3>
-                <p className="text-slate-600 mb-4">Understand how decentralized governance works and how to participate effectively.</p>
                 <Button variant="outline" className="w-full border-dao-purple text-dao-purple">
                   Read More
                 </Button>

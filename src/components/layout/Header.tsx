@@ -1,77 +1,43 @@
-
-import React, { useState } from 'react';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Menu, X } from 'lucide-react';
+import logo from '@/assets/svg/logo.svg';
 
 const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
   return (
-    <header className="w-full py-4 px-6 md:px-12 bg-white/90 backdrop-blur-md fixed top-0 z-50 shadow-sm">
-      <div className="max-w-7xl mx-auto flex justify-between items-center">
-        <div className="flex items-center">
-          <a href="/" className="text-2xl font-bold text-dao-purple">
-            OpenInvestDAO
-          </a>
-        </div>
-
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-8">
-          <a href="#features" className="text-slate-700 hover:text-dao-purple transition-colors">
-            Features
-          </a>
-          <a href="#how-it-works" className="text-slate-700 hover:text-dao-purple transition-colors">
-            How it Works
-          </a>
-          <a href="#community" className="text-slate-700 hover:text-dao-purple transition-colors">
-            Community
-          </a>
-          <Button className="bg-dao-purple hover:bg-dao-darkPurple text-white">
-            Join DAO
-          </Button>
-        </nav>
-
-        {/* Mobile menu button */}
-        <button className="md:hidden text-slate-800" onClick={toggleMenu}>
-          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-      </div>
-
-      {/* Mobile Navigation */}
-      {isMenuOpen && (
-        <nav className="md:hidden absolute top-16 left-0 right-0 bg-white border-t py-4 px-6 shadow-md">
-          <div className="flex flex-col space-y-4">
-            <a 
-              href="#features" 
-              className="text-slate-700 hover:text-dao-purple py-2"
-              onClick={toggleMenu}
-            >
-              Features
-            </a>
-            <a 
-              href="#how-it-works" 
-              className="text-slate-700 hover:text-dao-purple py-2"
-              onClick={toggleMenu}
-            >
-              How it Works
-            </a>
-            <a 
-              href="#community" 
-              className="text-slate-700 hover:text-dao-purple py-2"
-              onClick={toggleMenu}
-            >
-              Community
-            </a>
-            <Button className="bg-dao-purple hover:bg-dao-darkPurple text-white w-full">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-sm border-b border-slate-200">
+      <div className="max-w-7xl mx-auto px-6 py-4">
+        <div className="flex items-center justify-between">
+          <Link to="/" className="flex items-center space-x-2">
+            <img src={logo} alt="Open Invest Spotlight DAO" className="h-8 w-8" />
+            <span className="text-xl font-bold text-slate-900">Open Invest</span>
+          </Link>
+          
+          <nav className="hidden md:flex items-center space-x-8">
+            <Link to="/about" className="text-slate-600 hover:text-dao-purple transition-colors">
+              About
+            </Link>
+            <Link to="/investments" className="text-slate-600 hover:text-dao-purple transition-colors">
+              Investments
+            </Link>
+            <Link to="/governance" className="text-slate-600 hover:text-dao-purple transition-colors">
+              Governance
+            </Link>
+            <Link to="/resources" className="text-slate-600 hover:text-dao-purple transition-colors">
+              Resources
+            </Link>
+          </nav>
+          
+          <div className="flex items-center space-x-4">
+            <Button variant="outline" className="border-dao-purple text-dao-purple">
+              Connect Wallet
+            </Button>
+            <Button className="bg-dao-purple hover:bg-dao-darkPurple">
               Join DAO
             </Button>
           </div>
-        </nav>
-      )}
+        </div>
+      </div>
     </header>
   );
 };
