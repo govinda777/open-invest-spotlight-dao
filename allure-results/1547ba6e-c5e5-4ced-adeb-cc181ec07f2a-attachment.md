@@ -1,7 +1,7 @@
 # Test info
 
-- Name: Onboarding Flow >> should handle insufficient funds for contribution
-- Location: /Users/gosouza/projetos-p/open-invest-spotlight-dao/tests/e2e/onboarding.spec.ts:65:3
+- Name: Onboarding Flow >> should handle wallet connection during onboarding
+- Location: /Users/gosouza/projetos-p/open-invest-spotlight-dao/tests/e2e/onboarding.spec.ts:47:3
 
 # Error details
 
@@ -11,7 +11,7 @@ Call log:
   - waiting for getByText('Investor')
 
     at selectUserType (/Users/gosouza/projetos-p/open-invest-spotlight-dao/tests/e2e/utils.ts:40:34)
-    at /Users/gosouza/projetos-p/open-invest-spotlight-dao/tests/e2e/onboarding.spec.ts:82:11
+    at /Users/gosouza/projetos-p/open-invest-spotlight-dao/tests/e2e/onboarding.spec.ts:56:11
 ```
 
 # Page snapshot
