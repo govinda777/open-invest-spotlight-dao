@@ -6,47 +6,12 @@
 # Error details
 
 ```
-TimeoutError: locator.click: Timeout 15000ms exceeded.
+Error: locator.click: Test ended.
 Call log:
   - waiting for getByText('Investor')
 
     at selectUserType (/Users/gosouza/projetos-p/open-invest-spotlight-dao/tests/e2e/utils.ts:40:34)
     at /Users/gosouza/projetos-p/open-invest-spotlight-dao/tests/e2e/onboarding.spec.ts:141:11
-```
-
-# Page snapshot
-
-```yaml
-- region "Notifications alt+T"
-- dialog "Logo Welcome to Open Invest DAO":
-  - heading "Logo Welcome to Open Invest DAO" [level=2]:
-    - img "Logo"
-    - text: Welcome to Open Invest DAO
-  - paragraph: Let's get you started on your investment journey
-  - heading "How It Works" [level=3]
-  - list:
-    - listitem:
-      - text: "1"
-      - paragraph: Connect Your Wallet
-      - paragraph: Access the full functionality of the platform
-    - listitem:
-      - text: "2"
-      - paragraph: Make Initial Contribution
-      - paragraph: Start with an initial contribution to receive tokens
-    - listitem:
-      - text: "3"
-      - paragraph: Participate in Governance
-      - paragraph: Vote on proposals and platform decisions
-  - button "Previous"
-  - link "Full Guide":
-    - /url: /onboarding
-    - button "Full Guide"
-  - button "Next":
-    - text: Next
-    - img
-  - button "Close":
-    - img
-    - text: Close
 ```
 
 # Test source
@@ -92,7 +57,7 @@ Call log:
   38 | export const selectUserType = async (page: Page, userType: 'Investor' | 'Project Owner' | 'DAO Member' | 'Community Member') => {
   39 |   // Click the user type text first
 > 40 |   await page.getByText(userType).click();
-     |                                  ^ TimeoutError: locator.click: Timeout 15000ms exceeded.
+     |                                  ^ Error: locator.click: Test ended.
   41 |   
   42 |   // Then click the button to begin the journey
   43 |   await page.getByRole('button', { name: `Begin ${userType} Journey` }).click();
