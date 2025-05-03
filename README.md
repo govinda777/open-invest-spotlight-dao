@@ -309,7 +309,7 @@ O Open_Invest_DAO representa uma evolução no modelo de investimentos, combinan
 
 ---
 
-> “A grande oportunidade do Open Investment é poder oferecer uma assessoria cada vez mais qualificada, personalizada, a partir de uma visão global dos objetivos dos investidores e do seu apetite a risco, permitindo a construção de portfólios ainda mais aderentes às suas necessidades.”[5]
+> "A grande oportunidade do Open Investment é poder oferecer uma assessoria cada vez mais qualificada, personalizada, a partir de uma visão global dos objetivos dos investidores e do seu apetite a risco, permitindo a construção de portfólios ainda mais aderentes às suas necessidades."[5]
 
 ---
 
@@ -417,3 +417,97 @@ Citations:
 [77] https://repositorio.utdt.edu/bitstreams/dc657a86-0beb-4251-aedd-555a2335edd4/download
 [78] https://learn.microsoft.com/en-us/azure/active-directory-b2c/tutorial-create-user-flows
 [79] https://flowinc.com/lp-onboarding.html
+
+## Executando Testes End-to-End (E2E)
+
+O projeto utiliza dois frameworks de teste E2E: Cypress e Playwright. Para facilitar a execução dos testes, foi criado um script shell (`run-e2e-tests.sh`) que oferece várias opções de execução.
+
+### Pré-requisitos
+
+Certifique-se de que todas as dependências do projeto estejam instaladas:
+
+```bash
+npm install
+```
+
+### Script de Execução
+
+O script `run-e2e-tests.sh` oferece as seguintes opções:
+
+```bash
+# Mostrar ajuda
+./run-e2e-tests.sh --help
+
+# Executar todos os testes E2E (padrão)
+./run-e2e-tests.sh
+
+# Executar apenas testes Cypress
+./run-e2e-tests.sh --cypress
+
+# Executar apenas testes Playwright
+./run-e2e-tests.sh --playwright
+
+# Executar testes com interface gráfica (Cypress)
+./run-e2e-tests.sh --cypress --ui
+
+# Executar testes em modo debug
+./run-e2e-tests.sh --debug
+
+# Mostrar relatório de testes
+./run-e2e-tests.sh --report
+```
+
+### Opções Disponíveis
+
+- `-h, --help`: Mostra a mensagem de ajuda
+- `-c, --cypress`: Executa apenas os testes Cypress
+- `-p, --playwright`: Executa apenas os testes Playwright
+- `-a, --all`: Executa todos os testes E2E (comportamento padrão)
+- `-u, --ui`: Executa testes com interface gráfica (apenas Cypress)
+- `-d, --debug`: Executa testes em modo debug
+- `-r, --report`: Mostra o relatório de testes
+
+### Executando Testes Específicos
+
+#### Cypress
+
+Para executar testes Cypress com interface gráfica:
+
+```bash
+npm run test:e2e:dev
+```
+
+Para executar testes Cypress em modo debug:
+
+```bash
+npm run test:e2e:debug
+```
+
+#### Playwright
+
+Para executar testes Playwright com interface gráfica:
+
+```bash
+npm run test:e2e:ui
+```
+
+Para executar testes Playwright em modo debug:
+
+```bash
+npm run test:e2e:debug
+```
+
+### Visualizando Relatórios
+
+Para visualizar o relatório de testes após a execução:
+
+```bash
+npm run test:e2e:report
+```
+
+### Observações Importantes
+
+1. Certifique-se de que o servidor de desenvolvimento está rodando antes de executar os testes
+2. Os testes podem ser executados em diferentes ambientes (desenvolvimento, produção, etc.)
+3. Algumas opções são específicas para cada framework de teste
+4. O modo debug é útil para identificar problemas específicos nos testes
