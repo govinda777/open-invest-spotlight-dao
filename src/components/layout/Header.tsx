@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import WalletConnect from '@/components/WalletConnect';
 import logo from '@/assets/svg/logo.svg';
 
 const Header = () => {
@@ -29,9 +30,7 @@ const Header = () => {
           </nav>
           
           <div className="flex items-center space-x-4">
-            <Button variant="outline" className="border-dao-purple text-dao-purple">
-              Connect Wallet
-            </Button>
+            <WalletConnect />
             <Button className="bg-dao-purple hover:bg-dao-darkPurple">
               Join DAO
             </Button>
