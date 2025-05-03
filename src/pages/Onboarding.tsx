@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
@@ -7,9 +6,28 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { ChevronRight, BookOpen, Star, User, Users, Info } from "lucide-react";
 import logo from '@/assets/svg/logo.svg';
 import HowItWorksStep from "@/components/sections/HowItWorksStep";
+import { JourneyPaywall } from '@/components/journey/JourneyPaywall';
 
 const Onboarding = () => {
   const [currentStep, setCurrentStep] = useState(1);
+  const [hasNftAccess, setHasNftAccess] = useState(false);
+
+  useEffect(() => {
+    // Check if user has purchased the NFT
+    const purchaseDate = localStorage.getItem('onboardingNftPurchaseDate');
+    if (purchaseDate) {
+      const expirationDate = new Date(purchaseDate);
+      expirationDate.setDate(expirationDate.getDate() + 30);
+      
+      if (new Date() < expirationDate) {
+        setHasNftAccess(true);
+      }
+    }
+  }, []);
+
+  const handleNftPurchase = () => {
+    setHasNftAccess(true);
+  };
 
   const steps = [
     {
@@ -348,6 +366,17 @@ const Onboarding = () => {
               )}
             </div>
           </div>
+          
+          {/* Show paywall at the end of onboarding */}
+          {currentStep === steps.length && !hasNftAccess && (
+            <div className="mt-8">
+              <h3 className="text-xl font-semibold mb-4">Unlock Premium Features</h3>
+              <JourneyPaywall 
+                userType="investor" 
+                onPurchase={handleNftPurchase} 
+              />
+            </div>
+          )}
           
           <div className="flex justify-center">
             <div className="flex space-x-2">
