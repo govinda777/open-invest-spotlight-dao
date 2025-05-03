@@ -5,35 +5,23 @@ test.describe('Wallet Connection', () => {
     await page.addInitScript(() => {
       window.localStorage.clear();
     });
-    await page.goto('/', { waitUntil: 'domcontentloaded' });
-    await page.waitForSelector('body', { state: 'visible' });
+    await page.goto('/', { waitUntil: 'commit' });
+    await page.waitForSelector('body');
   });
 
   test('should connect to wallet', async ({ page }) => {
-    // Espera mais específica para o botão
     const connectButton = page.getByRole('button', { name: 'Connect Wallet' });
-    await connectButton.waitFor({ state: 'visible', timeout: 5000 });
-    
-    // Clica no botão
-    await connectButton.click();
-    
-    // Verifica conexão com timeout reduzido
-    await expect(page.getByText('Connected')).toBeVisible({ timeout: 5000 });
+    await connectButton.click({ timeout: 3000 });
+    await expect(page.getByText('Connected')).toBeVisible({ timeout: 3000 });
   });
 
   test('should handle wallet disconnection', async ({ page }) => {
-    // Conecta wallet
     const connectButton = page.getByRole('button', { name: 'Connect Wallet' });
-    await connectButton.waitFor({ state: 'visible', timeout: 5000 });
-    await connectButton.click();
-    await expect(page.getByText('Connected')).toBeVisible({ timeout: 5000 });
+    await connectButton.click({ timeout: 3000 });
+    await expect(page.getByText('Connected')).toBeVisible({ timeout: 3000 });
     
-    // Desconecta wallet
     const disconnectButton = page.getByRole('button', { name: 'Disconnect' });
-    await disconnectButton.waitFor({ state: 'visible', timeout: 5000 });
-    await disconnectButton.click();
-    
-    // Verifica desconexão
-    await expect(page.getByText('Connect Wallet')).toBeVisible({ timeout: 5000 });
+    await disconnectButton.click({ timeout: 3000 });
+    await expect(page.getByText('Connect Wallet')).toBeVisible({ timeout: 3000 });
   });
 }); 
