@@ -11,6 +11,7 @@ import InvestorJourney from "./pages/journeys/InvestorJourney";
 import ProjectOwnerJourney from "./pages/journeys/ProjectOwnerJourney";
 import DAOMemberJourney from "./pages/journeys/DAOMemberJourney";
 import CommunityMemberJourney from "./pages/journeys/CommunityMemberJourney";
+import Onboarding from "./pages/Onboarding";
 import logo from '@/assets/svg/logo.svg';
 import './App.css';
 
@@ -25,6 +26,7 @@ const App = () => (
         <main role="main">
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/onboarding" element={<Onboarding />} />
             <Route path="/journeys" element={<JourneysHub />} />
             <Route path="/journeys/investor" element={<InvestorJourney />} />
             <Route path="/journeys/project-owner" element={<ProjectOwnerJourney />} />

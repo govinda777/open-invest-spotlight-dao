@@ -1,3 +1,4 @@
+
 import logo from '@/assets/svg/logo.svg';
 import { Link } from 'react-router-dom';
 
@@ -13,7 +14,8 @@ export default function Index() {
           <div className="hidden md:flex space-x-6">
             <a href="#" className="text-gray-600 hover:text-purple-600 transition-colors">About</a>
             <a href="#" className="text-gray-600 hover:text-purple-600 transition-colors">Projects</a>
-            <a href="/journeys" className="text-gray-600 hover:text-purple-600 transition-colors">User Journeys</a>
+            <Link to="/onboarding" className="text-gray-600 hover:text-purple-600 transition-colors">Get Started</Link>
+            <Link to="/journeys" className="text-gray-600 hover:text-purple-600 transition-colors">User Journeys</Link>
             <a href="#" className="text-gray-600 hover:text-purple-600 transition-colors">Community</a>
           </div>
           <div>
@@ -34,9 +36,9 @@ export default function Index() {
               <button className="bg-white text-purple-600 font-medium px-6 py-3 rounded-md hover:bg-gray-100 transition-colors">
                 Explore Projects
               </button>
-              <button className="bg-purple-800 text-white font-medium px-6 py-3 rounded-md hover:bg-purple-900 transition-colors">
-                Submit Project
-              </button>
+              <Link to="/onboarding" className="bg-purple-800 text-white font-medium px-6 py-3 rounded-md hover:bg-purple-900 transition-colors">
+                Get Started
+              </Link>
             </div>
           </div>
         </section>
@@ -138,12 +140,12 @@ export default function Index() {
               Join our community today and be part of the decentralized investment revolution.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Link to="/journeys" className="bg-white text-purple-600 font-medium px-6 py-3 rounded-md hover:bg-gray-100 transition-colors">
+              <Link to="/onboarding" className="bg-white text-purple-600 font-medium px-6 py-3 rounded-md hover:bg-gray-100 transition-colors">
+                Start Onboarding
+              </Link>
+              <Link to="/journeys" className="bg-purple-800 text-white font-medium px-6 py-3 rounded-md hover:bg-purple-900 transition-colors">
                 View User Journeys
               </Link>
-              <button className="bg-purple-800 text-white font-medium px-6 py-3 rounded-md hover:bg-purple-900 transition-colors">
-                Connect Wallet
-              </button>
             </div>
           </div>
         </section>
