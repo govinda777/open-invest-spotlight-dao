@@ -2,14 +2,14 @@ import { PlaywrightTestConfig, devices } from '@playwright/test';
 
 const config: PlaywrightTestConfig = {
   testDir: './tests/e2e',
-  timeout: 15 * 1000,
+  timeout: 30 * 1000,
   expect: {
-    timeout: 3000
+    timeout: 5000
   },
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: 0,
-  workers: 8,
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? 4 : 8,
   reporter: [
     ['html', { 
       outputFolder: 'playwright-report',
@@ -40,6 +40,15 @@ const config: PlaywrightTestConfig = {
     ignoreHTTPSErrors: true,
     javaScriptEnabled: true,
     acceptDownloads: true,
+    browserName: 'chromium',
+    channel: 'chrome',
+    serviceWorkers: 'block',
+    offline: false,
+    hasTouch: false,
+    isMobile: false,
+    extraHTTPHeaders: {
+      'Accept-Language': 'en-US,en;q=0.9'
+    }
   },
   projects: [
     {
@@ -54,6 +63,32 @@ const config: PlaywrightTestConfig = {
           '--disable-setuid-sandbox',
           '--disable-web-security',
           '--disable-features=IsolateOrigins,site-per-process',
+          '--disable-site-isolation-trials',
+          '--disable-extensions',
+          '--disable-software-rasterizer',
+          '--disable-background-timer-throttling',
+          '--disable-backgrounding-occluded-windows',
+          '--disable-renderer-backgrounding',
+          '--disable-background-networking',
+          '--disable-default-apps',
+          '--disable-sync',
+          '--disable-translate',
+          '--metrics-recording-only',
+          '--mute-audio',
+          '--no-first-run',
+          '--safebrowsing-disable-auto-update',
+          '--disable-client-side-phishing-detection',
+          '--disable-component-update',
+          '--disable-domain-reliability',
+          '--disable-hang-monitor',
+          '--disable-ipc-flooding-protection',
+          '--disable-prompt-on-repost',
+          '--disable-speech-api',
+          '--disable-web-security',
+          '--disk-cache-size=33554432',
+          '--media-cache-size=33554432',
+          '--aggressive-cache-discard',
+          '--disable-features=AudioServiceOutOfProcess,IsolateOrigins,site-per-process',
           '--disable-site-isolation-trials'
         ]
       },

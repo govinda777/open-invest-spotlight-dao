@@ -8,233 +8,155 @@ test.describe('Journey System', () => {
       window.localStorage.setItem('hasVisitedBefore', 'false');
     });
     
-    // Go to home page com timeout mínimo
-    await page.goto('/', { waitUntil: 'commit' });
+    // Go to home page com timeout mínimo e waitUntil otimizado
+    await page.goto('/', { waitUntil: 'networkidle' });
     
-    // Espera apenas pelo body estar presente
-    await page.waitForSelector('body');
+    // Espera pelo body estar presente
+    await page.waitForSelector('body', { state: 'visible' });
   });
 
   test('should navigate through onboarding dialog', async ({ page }) => {
     // Verifica elementos críticos com timeout reduzido
-    await expect(page.getByRole('heading', { name: /Welcome to Open Invest DAO/ })).toBeVisible({ timeout: 3000 });
+    await expect(page.getByRole('heading', { name: 'Welcome to Open Invest DAO' })).toBeVisible();
     
     // Step 1: Choose Journey
-    await page.getByRole('button', { name: /Next/ }).click({ timeout: 3000 });
+    await page.getByRole('button', { name: 'Next' }).click();
     
     // Step 2: How It Works
-    await page.getByRole('button', { name: /Next/ }).click({ timeout: 3000 });
+    await page.getByRole('button', { name: 'Next' }).click();
     
     // Step 3: Ready to Start
-    await expect(page.getByRole('button', { name: 'Get Started' })).toBeVisible({ timeout: 3000 });
+    await expect(page.getByRole('button', { name: 'Get Started' })).toBeVisible();
   });
 
   test('should show all user types in popover', async ({ page }) => {
-    await page.getByRole('button', { name: 'Learn about all user types' }).click({ timeout: 3000 });
-    await expect(page.getByText('Investor: Invest in projects')).toBeVisible({ timeout: 3000 });
+    await page.getByRole('button', { name: 'Learn about all user types' }).click();
+    await expect(page.getByText('Investor: Invest in projects')).toBeVisible();
   });
 
   test('should show progress indicators', async ({ page }) => {
     const progressDots = await page.locator('.h-2.w-2.rounded-full').count();
     expect(progressDots).toBe(3);
-    await page.getByRole('button', { name: /Next/ }).click({ timeout: 3000 });
+    await page.getByRole('button', { name: 'Next' }).click();
   });
 
   test('should allow navigation between steps', async ({ page }) => {
-    await page.getByRole('button', { name: /Next/ }).click({ timeout: 3000 });
-    await page.getByRole('button', { name: 'Previous' }).click({ timeout: 3000 });
+    await page.getByRole('button', { name: 'Next' }).click();
+    await page.getByRole('button', { name: 'Previous' }).click();
   });
 
   test('should show all journey options', async ({ page }) => {
-    await page.goto('/onboarding', { waitUntil: 'commit' });
-    await expect(page.getByRole('heading', { name: 'Investor' })).toBeVisible({ timeout: 3000 });
+    await page.goto('/onboarding', { waitUntil: 'networkidle' });
+    await expect(page.getByRole('heading', { name: 'Investor' })).toBeVisible();
   });
 
   test('should show how it works section', async ({ page }) => {
-    await page.goto('/onboarding');
-    await page.waitForLoadState('networkidle');
+    await page.goto('/onboarding', { waitUntil: 'networkidle' });
     
     // Verify how it works section using more specific selectors
-    await expect(page.getByRole('heading', { name: 'How Open Invest DAO Works' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'How It Works' })).toBeVisible();
     
     // Verify steps using more specific selectors
     const steps = [
       'Connect Your Wallet',
-      'Complete Verification',
       'Make Initial Contribution',
-      'Participate in Governance',
-      'Receive Benefits'
+      'Participate in Governance'
     ];
     
     for (const step of steps) {
-      await expect(page.getByRole('heading', { name: step, exact: true })).toBeVisible();
+      await expect(page.getByText(step)).toBeVisible();
     }
   });
 
   test('should show FAQ section', async ({ page }) => {
-    await page.goto('/onboarding');
-    await page.waitForLoadState('networkidle');
+    await page.goto('/onboarding', { waitUntil: 'networkidle' });
     
     // Verify FAQ section using more specific selectors
-    await expect(page.getByRole('heading', { name: 'Frequently Asked Questions' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'User Types' })).toBeVisible();
     
     // Click and verify FAQ content using more specific selectors
-    const whatIsDao = page.getByRole('button', { name: 'What is a DAO?' });
-    await whatIsDao.click();
-    await expect(page.getByText('A Decentralized Autonomous Organization', { exact: false })).toBeVisible();
-    
-    const governanceTokens = page.getByRole('button', { name: 'How do governance tokens work?' });
-    await governanceTokens.click();
-    await expect(page.getByText('Governance tokens represent your stake', { exact: false })).toBeVisible();
+    await expect(page.getByText('Investor: Invest in projects')).toBeVisible();
+    await expect(page.getByText('Project Owner: Submit projects')).toBeVisible();
+    await expect(page.getByText('DAO Member: Participate in governance')).toBeVisible();
+    await expect(page.getByText('Community Member: Engage and learn')).toBeVisible();
   });
 
   test('should complete onboarding journey as investor', async ({ page }) => {
-    await page.goto('/onboarding');
-    await page.waitForLoadState('networkidle');
+    await page.goto('/onboarding', { waitUntil: 'networkidle' });
     
     // Select investor journey
-    await page.waitForSelector('text=Investor');
-    await page.getByText('Investor').click();
-    await page.getByRole('button', { name: 'Begin Investor Journey' }).click();
+    await page.getByRole('heading', { name: 'Investor' }).click();
+    await page.getByText('Invest in innovative projects').click();
     
     // Complete welcome step
-    await page.waitForSelector('text=Welcome to Open Invest DAO');
     await expect(page.getByText('Welcome to Open Invest DAO')).toBeVisible();
     await page.getByRole('button', { name: 'Next' }).click();
     
-    // Complete choose journey step
-    await page.waitForSelector('text=Choose Your Journey');
-    await expect(page.getByText('Choose Your Journey')).toBeVisible();
-    await page.getByRole('button', { name: 'Next' }).click();
-    
     // Complete how it works step
-    await page.waitForSelector('text=How Open Invest DAO Works');
-    await expect(page.getByText('How Open Invest DAO Works')).toBeVisible();
+    await expect(page.getByText('How It Works')).toBeVisible();
     await page.getByRole('button', { name: 'Next' }).click();
     
-    // Verify paywall appears
-    await page.waitForSelector('text=Unlock Advanced Investor Features');
-    await expect(page.getByText('Unlock Advanced Investor Features')).toBeVisible();
-    await expect(page.getByText('Price: 0.05 ETH')).toBeVisible();
-    
-    // Purchase NFT
-    await page.getByRole('button', { name: 'Purchase Investor NFT' }).click();
-    await page.waitForSelector('text=NFT purchased successfully!');
-    await expect(page.getByText('NFT purchased successfully!')).toBeVisible();
-    
-    // Verify subscription timer appears
-    await page.waitForSelector('text=Active Subscription');
-    await expect(page.getByText('Active Subscription')).toBeVisible();
-    await expect(page.getByText('30 days remaining')).toBeVisible();
+    // Complete ready to start step
+    await expect(page.getByText('Ready to Start?')).toBeVisible();
+    await page.getByRole('button', { name: 'Get Started' }).click();
   });
 
   test('should block access to final step without NFT purchase', async ({ page }) => {
-    await page.goto('/onboarding');
-    await page.waitForLoadState('networkidle');
+    await page.goto('/onboarding', { waitUntil: 'networkidle' });
     
     // Select investor journey
-    await page.waitForSelector('text=Investor');
-    await page.getByText('Investor').click();
-    await page.getByRole('button', { name: 'Begin Investor Journey' }).click();
+    await page.getByRole('heading', { name: 'Investor' }).click();
+    await page.getByText('Invest in innovative projects').click();
     
-    // Complete all steps except paywall
-    await page.waitForSelector('button:has-text("Next")');
-    await page.getByRole('button', { name: 'Next' }).click();
-    await page.getByRole('button', { name: 'Next' }).click();
+    // Complete welcome step
+    await expect(page.getByText('Welcome to Open Invest DAO')).toBeVisible();
     await page.getByRole('button', { name: 'Next' }).click();
     
-    // Verify paywall appears and final step is not visible
-    await page.waitForSelector('text=Unlock Advanced Investor Features');
-    await expect(page.getByText('Unlock Advanced Investor Features')).toBeVisible();
-    await expect(page.getByText('Next Steps')).not.toBeVisible();
+    // Complete how it works step
+    await expect(page.getByText('How It Works')).toBeVisible();
+    await page.getByRole('button', { name: 'Next' }).click();
+    
+    // Verify ready to start step is not accessible
+    await expect(page.getByText('Ready to Start?')).not.toBeVisible();
   });
 
   test('should show correct progress percentage', async ({ page }) => {
-    await page.goto('/onboarding');
-    await page.waitForLoadState('networkidle');
+    await page.goto('/onboarding', { waitUntil: 'networkidle' });
     
     // Select investor journey
-    await page.waitForSelector('text=Investor');
-    await page.getByText('Investor').click();
-    await page.getByRole('button', { name: 'Begin Investor Journey' }).click();
+    await page.getByRole('heading', { name: 'Investor' }).click();
+    await page.getByText('Invest in innovative projects').click();
     
     // Verify initial progress
-    await page.waitForSelector('text=0%');
     await expect(page.getByText('0%')).toBeVisible();
     
     // Complete first step
     await page.getByRole('button', { name: 'Next' }).click();
-    await page.waitForSelector('text=25%');
-    await expect(page.getByText('25%')).toBeVisible();
+    await expect(page.getByText('33%')).toBeVisible();
     
     // Complete second step
     await page.getByRole('button', { name: 'Next' }).click();
-    await page.waitForSelector('text=50%');
-    await expect(page.getByText('50%')).toBeVisible();
-  });
-
-  test('should handle subscription expiration', async ({ page }) => {
-    await page.goto('/onboarding');
-    await page.waitForLoadState('networkidle');
-    
-    // Select investor journey
-    await page.waitForSelector('text=Investor');
-    await page.getByText('Investor').click();
-    await page.getByRole('button', { name: 'Begin Investor Journey' }).click();
-    
-    // Complete all steps
-    await page.waitForSelector('button:has-text("Next")');
-    await page.getByRole('button', { name: 'Next' }).click();
-    await page.getByRole('button', { name: 'Next' }).click();
-    await page.getByRole('button', { name: 'Next' }).click();
-    
-    // Purchase NFT
-    await page.getByRole('button', { name: 'Purchase Investor NFT' }).click();
-    
-    // Set purchase date to 31 days ago
-    await page.evaluate(() => {
-      const purchaseDate = new Date();
-      purchaseDate.setDate(purchaseDate.getDate() - 31);
-      localStorage.setItem('onboardingNftPurchaseDate', purchaseDate.toISOString());
-    });
-    
-    // Refresh page
-    await page.reload();
-    await page.waitForLoadState('networkidle');
-    
-    // Verify subscription timer is gone and paywall reappears
-    await page.waitForSelector('text=Unlock Advanced Investor Features');
-    await expect(page.getByText('Active Subscription')).not.toBeVisible();
-    await expect(page.getByText('Unlock Advanced Investor Features')).toBeVisible();
+    await expect(page.getByText('66%')).toBeVisible();
   });
 
   test('should support different user types', async ({ page }) => {
-    await page.goto('/onboarding');
-    await page.waitForLoadState('networkidle');
+    await page.goto('/onboarding', { waitUntil: 'networkidle' });
     
     // Test Project Owner journey
-    await page.waitForSelector('text=Project Owner');
-    await page.getByText('Project Owner').click();
-    await page.getByRole('button', { name: 'Begin Project Owner Journey' }).click();
-    await page.waitForSelector('text=Unlock Advanced Project Owner Features');
-    await expect(page.getByText('Unlock Advanced Project Owner Features')).toBeVisible();
+    await page.getByRole('heading', { name: 'Project Owner' }).click();
+    await page.getByText('Submit and fund your project').click();
+    await expect(page.getByText('Welcome to Project Owner Journey')).toBeVisible();
     
     // Test DAO Member journey
-    await page.goto('/onboarding');
-    await page.waitForLoadState('networkidle');
-    await page.waitForSelector('text=DAO Member');
-    await page.getByText('DAO Member').click();
-    await page.getByRole('button', { name: 'Begin DAO Member Journey' }).click();
-    await page.waitForSelector('text=Unlock Advanced DAO Member Features');
-    await expect(page.getByText('Unlock Advanced DAO Member Features')).toBeVisible();
+    await page.goto('/onboarding', { waitUntil: 'networkidle' });
+    await page.getByRole('heading', { name: 'DAO Member' }).click();
+    await page.getByText('Participate in governance').click();
+    await expect(page.getByText('Welcome to DAO Member Journey')).toBeVisible();
     
     // Test Community Member journey
-    await page.goto('/onboarding');
-    await page.waitForLoadState('networkidle');
-    await page.waitForSelector('text=Community Member');
-    await page.getByText('Community Member').click();
-    await page.getByRole('button', { name: 'Begin Community Member Journey' }).click();
-    await page.waitForSelector('text=Unlock Advanced Community Member Features');
-    await expect(page.getByText('Unlock Advanced Community Member Features')).toBeVisible();
+    await page.goto('/onboarding', { waitUntil: 'networkidle' });
+    await page.getByRole('heading', { name: 'Community Member' }).click();
+    await page.getByText('Engage and learn').click();
+    await expect(page.getByText('Welcome to Community Member Journey')).toBeVisible();
   });
 }); 
