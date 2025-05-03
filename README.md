@@ -1,5 +1,9 @@
 # Open Invest Spotlight DAO
 
+npx playwright show-report
+
+npx playwright show-report ./playwright-report
+
 [![E2E Tests](https://github.com/open-invest/spotlight-dao/actions/workflows/e2e-tests.yml/badge.svg)](https://github.com/open-invest/spotlight-dao/actions/workflows/e2e-tests.yml)
 [![Test Coverage](https://codecov.io/gh/open-invest/spotlight-dao/branch/main/graph/badge.svg)](https://codecov.io/gh/open-invest/spotlight-dao)
 

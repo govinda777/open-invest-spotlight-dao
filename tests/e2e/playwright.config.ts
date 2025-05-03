@@ -2,19 +2,23 @@ import { PlaywrightTestConfig, devices } from '@playwright/test';
 
 const config: PlaywrightTestConfig = {
   testDir: './tests',
-  timeout: 30 * 1000,
+  timeout: 15 * 1000,
   expect: {
-    timeout: 5000
+    timeout: 3000
   },
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 1 : 4,
   reporter: 'html',
   use: {
     actionTimeout: 0,
     trace: 'on-first-retry',
     baseURL: 'http://localhost:8080',
+    viewport: { width: 1280, height: 720 },
+    launchOptions: {
+      args: ['--disable-gpu', '--disable-dev-shm-usage']
+    }
   },
   projects: [
     {
@@ -26,6 +30,7 @@ const config: PlaywrightTestConfig = {
     command: 'npm run dev',
     port: 8080,
     reuseExistingServer: !process.env.CI,
+    timeout: 10 * 1000,
   },
 };
 

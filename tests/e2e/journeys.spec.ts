@@ -8,11 +8,11 @@ test.describe('Journey System', () => {
       window.localStorage.setItem('hasVisitedBefore', 'false');
     });
     
-    await page.goto('/', { waitUntil: 'networkidle' });
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
   });
 
   test('should navigate through investor journey', async ({ page }) => {
-    await page.goto('/journeys', { waitUntil: 'networkidle' });
+    await page.goto('/journeys', { waitUntil: 'domcontentloaded' });
     
     // Verifica título da página
     await expect(page.getByRole('heading', { name: 'Investor Journey' })).toBeVisible();
@@ -24,7 +24,7 @@ test.describe('Journey System', () => {
   });
 
   test('should show journey resources', async ({ page }) => {
-    await page.goto('/journeys', { waitUntil: 'networkidle' });
+    await page.goto('/journeys', { waitUntil: 'domcontentloaded' });
     
     // Clica na tab de recursos
     await page.getByRole('tab', { name: 'Resources' }).click();
@@ -37,7 +37,7 @@ test.describe('Journey System', () => {
   });
 
   test('should show journey details', async ({ page }) => {
-    await page.goto('/journeys', { waitUntil: 'networkidle' });
+    await page.goto('/journeys', { waitUntil: 'domcontentloaded' });
     
     // Clica na tab de detalhes
     await page.getByRole('tab', { name: 'Journey Details' }).click();
@@ -50,7 +50,7 @@ test.describe('Journey System', () => {
   });
 
   test('should allow navigation between tabs', async ({ page }) => {
-    await page.goto('/journeys', { waitUntil: 'networkidle' });
+    await page.goto('/journeys', { waitUntil: 'domcontentloaded' });
     
     // Navega entre as tabs
     await page.getByRole('tab', { name: 'Resources' }).click();
@@ -64,7 +64,7 @@ test.describe('Journey System', () => {
   });
 
   test('should show back navigation', async ({ page }) => {
-    await page.goto('/journeys', { waitUntil: 'networkidle' });
+    await page.goto('/journeys', { waitUntil: 'domcontentloaded' });
     
     // Verifica botão de voltar
     await expect(page.getByRole('link', { name: 'Back to Journeys' })).toBeVisible();

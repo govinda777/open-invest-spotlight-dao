@@ -56,7 +56,7 @@ Call log:
    2 |
    3 | export const waitForAppLoad = async (page: Page) => {
    4 |   // Wait for the main content to be visible with reduced timeout
-   5 |   await page.waitForSelector('main', { timeout: 3000 });
+   5 |   await page.waitForSelector('main', { timeout: 2000, state: 'visible' });
    6 | };
    7 |
    8 | export const mockWallet = async (page: Page, options = { hasBalance: true }) => {
@@ -85,7 +85,7 @@ Call log:
   31 | export const completeOnboardingSteps = async (page: Page, steps = 1) => {
   32 |   for (let i = 0; i < steps; i++) {
   33 |     await page.getByRole('button', { name: /Next|Continue|Complete/i }).click();
-  34 |     await page.waitForSelector('main', { timeout: 3000 });
+  34 |     await page.waitForSelector('main', { timeout: 2000, state: 'visible' });
   35 |   }
   36 | };
   37 |
@@ -98,6 +98,6 @@ Call log:
   43 |   await page.getByRole('button', { name: `Begin ${userType} Journey` }).click();
   44 |   
   45 |   // Wait for main content to be visible with reduced timeout
-  46 |   await page.waitForSelector('main', { timeout: 3000 });
+  46 |   await page.waitForSelector('main', { timeout: 2000, state: 'visible' });
   47 | }; 
 ```

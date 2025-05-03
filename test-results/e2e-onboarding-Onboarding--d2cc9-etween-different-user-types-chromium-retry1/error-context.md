@@ -6,12 +6,47 @@
 # Error details
 
 ```
-Error: locator.click: Test ended.
+TimeoutError: locator.click: Timeout 15000ms exceeded.
 Call log:
   - waiting for getByText('Investor')
 
     at selectUserType (/Users/gosouza/projetos-p/open-invest-spotlight-dao/tests/e2e/utils.ts:40:34)
     at /Users/gosouza/projetos-p/open-invest-spotlight-dao/tests/e2e/onboarding.spec.ts:141:11
+```
+
+# Page snapshot
+
+```yaml
+- region "Notifications alt+T"
+- dialog "Logo Welcome to Open Invest DAO":
+  - heading "Logo Welcome to Open Invest DAO" [level=2]:
+    - img "Logo"
+    - text: Welcome to Open Invest DAO
+  - paragraph: Let's get you started on your investment journey
+  - heading "How It Works" [level=3]
+  - list:
+    - listitem:
+      - text: "1"
+      - paragraph: Connect Your Wallet
+      - paragraph: Access the full functionality of the platform
+    - listitem:
+      - text: "2"
+      - paragraph: Make Initial Contribution
+      - paragraph: Start with an initial contribution to receive tokens
+    - listitem:
+      - text: "3"
+      - paragraph: Participate in Governance
+      - paragraph: Vote on proposals and platform decisions
+  - button "Previous"
+  - link "Full Guide":
+    - /url: /onboarding
+    - button "Full Guide"
+  - button "Next":
+    - text: Next
+    - img
+  - button "Close":
+    - img
+    - text: Close
 ```
 
 # Test source
@@ -21,7 +56,7 @@ Call log:
    2 |
    3 | export const waitForAppLoad = async (page: Page) => {
    4 |   // Wait for the main content to be visible with reduced timeout
-   5 |   await page.waitForSelector('main', { timeout: 3000 });
+   5 |   await page.waitForSelector('main', { timeout: 2000, state: 'visible' });
    6 | };
    7 |
    8 | export const mockWallet = async (page: Page, options = { hasBalance: true }) => {
@@ -50,19 +85,19 @@ Call log:
   31 | export const completeOnboardingSteps = async (page: Page, steps = 1) => {
   32 |   for (let i = 0; i < steps; i++) {
   33 |     await page.getByRole('button', { name: /Next|Continue|Complete/i }).click();
-  34 |     await page.waitForSelector('main', { timeout: 3000 });
+  34 |     await page.waitForSelector('main', { timeout: 2000, state: 'visible' });
   35 |   }
   36 | };
   37 |
   38 | export const selectUserType = async (page: Page, userType: 'Investor' | 'Project Owner' | 'DAO Member' | 'Community Member') => {
   39 |   // Click the user type text first
 > 40 |   await page.getByText(userType).click();
-     |                                  ^ Error: locator.click: Test ended.
+     |                                  ^ TimeoutError: locator.click: Timeout 15000ms exceeded.
   41 |   
   42 |   // Then click the button to begin the journey
   43 |   await page.getByRole('button', { name: `Begin ${userType} Journey` }).click();
   44 |   
   45 |   // Wait for main content to be visible with reduced timeout
-  46 |   await page.waitForSelector('main', { timeout: 3000 });
+  46 |   await page.waitForSelector('main', { timeout: 2000, state: 'visible' });
   47 | }; 
 ```
