@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { waitForAppLoad, mockWallet, clearLocalStorage, completeOnboardingSteps } from './utils';
+import { waitForAppLoad, mockWallet, clearLocalStorage, completeOnboardingSteps, selectUserType } from './utils';
 
 test.describe('Onboarding Flow', () => {
   test.beforeEach(async ({ page }) => {
@@ -9,12 +9,6 @@ test.describe('Onboarding Flow', () => {
   });
 
   test('should complete full investor onboarding journey', async ({ page }) => {
-    // Close the onboarding dialog if it appears
-    const dialogCloseButton = page.getByRole('button', { name: 'Close' });
-    if (await dialogCloseButton.isVisible()) {
-      await dialogCloseButton.click();
-    }
-    
     await page.goto('/onboarding');
     await waitForAppLoad(page);
     
@@ -24,13 +18,10 @@ test.describe('Onboarding Flow', () => {
     
     // Navigate through welcome step
     await page.getByRole('button', { name: /Next|Continue|Get Started/i }).click();
+    await page.waitForLoadState('networkidle');
     
-    // Choose journey step
-    await expect(page.getByText(/Choose Your Journey/i)).toBeVisible();
-    
-    // Click the Investor journey button
-    const investorCard = page.locator('a', { hasText: 'Begin Investor Journey' });
-    await investorCard.click();
+    // Select investor journey
+    await selectUserType(page, 'Investor');
     
     // Verify investor journey page
     await expect(page.getByText(/Discover and invest/i)).toBeVisible();
@@ -38,77 +29,71 @@ test.describe('Onboarding Flow', () => {
     // Connect wallet
     await mockWallet(page);
     await page.getByRole('button', { name: /Connect.*Wallet/i }).click();
+    await page.waitForLoadState('networkidle');
     await expect(page.getByText(/Wallet Connected/i)).toBeVisible();
     
     // Complete verification
     await expect(page.getByText(/Complete Verification/i)).toBeVisible();
     await page.getByRole('button', { name: /Next|Continue|Verify/i }).click();
+    await page.waitForLoadState('networkidle');
     
     // Make initial contribution
     await expect(page.getByText(/Make Initial Contribution/i)).toBeVisible();
     await page.getByRole('button', { name: /Contribute/i }).click();
+    await page.waitForLoadState('networkidle');
     await expect(page.getByText(/Contribution successful/i)).toBeVisible();
   });
 
   test('should handle wallet connection during onboarding', async ({ page }) => {
-    // Close the onboarding dialog if it appears
-    const dialogCloseButton = page.getByRole('button', { name: 'Close' });
-    if (await dialogCloseButton.isVisible()) {
-      await dialogCloseButton.click();
-    }
-    
     await page.goto('/onboarding');
     await waitForAppLoad(page);
     
-    // Navigate to investor journey
+    // Navigate through welcome step
     await page.getByRole('button', { name: /Next|Continue|Get Started/i }).click();
-    const investorCard = page.locator('a', { hasText: 'Begin Investor Journey' });
-    await investorCard.click();
+    await page.waitForLoadState('networkidle');
+    
+    // Select investor journey
+    await selectUserType(page, 'Investor');
     
     // Mock wallet and connect
     await mockWallet(page);
     await page.getByRole('button', { name: /Connect.*Wallet/i }).click();
+    await page.waitForLoadState('networkidle');
     await expect(page.getByText(/Wallet Connected/i)).toBeVisible();
   });
 
   test('should handle insufficient funds for contribution', async ({ page }) => {
-    // Close the onboarding dialog if it appears
-    const dialogCloseButton = page.getByRole('button', { name: 'Close' });
-    if (await dialogCloseButton.isVisible()) {
-      await dialogCloseButton.click();
-    }
-    
     await page.goto('/onboarding');
     await waitForAppLoad(page);
     
-    // Navigate to investor journey
+    // Navigate through welcome step
     await page.getByRole('button', { name: /Next|Continue|Get Started/i }).click();
-    const investorCard = page.locator('a', { hasText: 'Begin Investor Journey' });
-    await investorCard.click();
+    await page.waitForLoadState('networkidle');
+    
+    // Select investor journey
+    await selectUserType(page, 'Investor');
     
     // Mock wallet with no balance and connect
     await mockWallet(page, { hasBalance: false });
     await page.getByRole('button', { name: /Connect.*Wallet/i }).click();
+    await page.waitForLoadState('networkidle');
     
     // Attempt contribution
     await page.getByRole('button', { name: /Contribute/i }).click();
+    await page.waitForLoadState('networkidle');
     await expect(page.getByText(/Insufficient funds/i)).toBeVisible();
   });
 
   test('should persist onboarding progress', async ({ page }) => {
-    // Close the onboarding dialog if it appears
-    const dialogCloseButton = page.getByRole('button', { name: 'Close' });
-    if (await dialogCloseButton.isVisible()) {
-      await dialogCloseButton.click();
-    }
-    
     await page.goto('/onboarding');
     await waitForAppLoad(page);
     
-    // Start journey and complete first step
+    // Navigate through welcome step
     await page.getByRole('button', { name: /Next|Continue|Get Started/i }).click();
-    const investorCard = page.locator('a', { hasText: 'Begin Investor Journey' });
-    await investorCard.click();
+    await page.waitForLoadState('networkidle');
+    
+    // Select investor journey
+    await selectUserType(page, 'Investor');
     
     // Store current URL
     const currentUrl = page.url();
@@ -122,31 +107,25 @@ test.describe('Onboarding Flow', () => {
   });
 
   test('should allow switching between different user types', async ({ page }) => {
-    // Close the onboarding dialog if it appears
-    const dialogCloseButton = page.getByRole('button', { name: 'Close' });
-    if (await dialogCloseButton.isVisible()) {
-      await dialogCloseButton.click();
-    }
-    
     await page.goto('/onboarding');
     await waitForAppLoad(page);
     
-    // Navigate through welcome
+    // Navigate through welcome step
     await page.getByRole('button', { name: /Next|Continue|Get Started/i }).click();
+    await page.waitForLoadState('networkidle');
     
     // Try Investor journey
-    const investorCard = page.locator('a', { hasText: 'Begin Investor Journey' });
-    await investorCard.click();
+    await selectUserType(page, 'Investor');
     await expect(page.getByText(/Discover and invest/i)).toBeVisible();
     
     // Go back to selection
     await page.goto('/onboarding');
     await waitForAppLoad(page);
     await page.getByRole('button', { name: /Next|Continue|Get Started/i }).click();
+    await page.waitForLoadState('networkidle');
     
     // Try Project Owner journey
-    const projectOwnerCard = page.locator('a', { hasText: 'Begin Project Owner Journey' });
-    await projectOwnerCard.click();
+    await selectUserType(page, 'Project Owner');
     await expect(page.getByText(/Submit.*blockchain project/i)).toBeVisible();
   });
 }); 

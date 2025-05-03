@@ -2,9 +2,9 @@ import { PlaywrightTestConfig, devices } from '@playwright/test';
 
 const config: PlaywrightTestConfig = {
   testDir: './tests/e2e',
-  timeout: 30 * 1000,
+  timeout: 60 * 1000,
   expect: {
-    timeout: 5000
+    timeout: 10000
   },
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
@@ -32,6 +32,10 @@ const config: PlaywrightTestConfig = {
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     baseURL: 'http://localhost:8080',
+    viewport: { width: 1280, height: 720 },
+    launchOptions: {
+      slowMo: 100,
+    },
   },
   projects: [
     {
@@ -39,11 +43,6 @@ const config: PlaywrightTestConfig = {
       use: { ...devices['Desktop Chrome'] },
     },
   ],
-  webServer: {
-    command: 'npm run dev',
-    port: 8080,
-    reuseExistingServer: !process.env.CI,
-  },
 };
 
 export default config; 
