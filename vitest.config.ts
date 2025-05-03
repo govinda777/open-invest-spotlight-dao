@@ -9,6 +9,25 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
     exclude: ['tests/e2e/**', '**/node_modules/**'],
+    threads: true,
+    maxThreads: 4,
+    minThreads: 2,
+    cache: {
+      dir: './node_modules/.vitest',
+    },
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      exclude: [
+        'node_modules/',
+        'tests/',
+        '**/*.d.ts',
+        '**/*.test.{ts,tsx}',
+        '**/*.spec.{ts,tsx}',
+      ],
+    },
+    watch: false,
+    testTimeout: 10000,
   },
   resolve: {
     alias: {
