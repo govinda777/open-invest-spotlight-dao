@@ -1,9 +1,18 @@
 # Open Invest Spotlight DAO
 
-npx playwright show-report
+npx playwright test
 
+> Table http://localhost:9323/
+npx playwright show-report
+npx allure generate allure-results --clean -o allure-report
+
+> Dashboard http://127.0.0.1:54832/
+npx allure open allure-report
+
+> Playwright
 npx playwright show-report ./playwright-report
 
+> Serve
 npm run report:serve
 
 npm run report:build
