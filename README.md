@@ -165,3 +165,24 @@ Para mais informações, entre em contato:
 - Email: contact@openinvest.xyz
 - Website: https://openinvest.xyz
 - Discord: https://discord.gg/openinvest
+
+## Relatórios de Teste
+
+Os relatórios de teste são gerados automaticamente após cada execução dos testes E2E e publicados no GitHub Pages. Você pode acessar o relatório mais recente em:
+
+https://[seu-usuario].github.io/[nome-do-repo]/
+
+### Comandos Locais
+
+Para gerar e visualizar os relatórios localmente:
+
+```bash
+# Executar testes e gerar relatório
+npm run test:e2e:allure
+
+# Apenas gerar relatório (após executar os testes)
+npm run test:e2e:allure:generate
+
+# Abrir relatório no navegador
+npm run test:e2e:allure:open
+```
