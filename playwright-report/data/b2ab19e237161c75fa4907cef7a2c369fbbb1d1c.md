@@ -1,7 +1,7 @@
 # Test info
 
-- Name: Onboarding Flow >> should handle wallet connection during onboarding
-- Location: /Users/gosouza/projetos-p/open-invest-spotlight-dao/tests/e2e/onboarding.spec.ts:53:3
+- Name: Onboarding Flow >> should handle insufficient funds for contribution
+- Location: /Users/gosouza/projetos-p/open-invest-spotlight-dao/tests/e2e/onboarding.spec.ts:74:3
 
 # Error details
 
@@ -10,7 +10,7 @@ Error: locator.click: Test timeout of 30000ms exceeded.
 Call log:
   - waiting for locator('a').filter({ hasText: 'Begin Investor Journey' })
 
-    at /Users/gosouza/projetos-p/open-invest-spotlight-dao/tests/e2e/onboarding.spec.ts:66:24
+    at /Users/gosouza/projetos-p/open-invest-spotlight-dao/tests/e2e/onboarding.spec.ts:87:24
 ```
 
 # Page snapshot
@@ -115,8 +115,7 @@ Call log:
    63 |     // Navigate to investor journey
    64 |     await page.getByRole('button', { name: /Next|Continue|Get Started/i }).click();
    65 |     const investorCard = page.locator('a', { hasText: 'Begin Investor Journey' });
->  66 |     await investorCard.click();
-      |                        ^ Error: locator.click: Test timeout of 30000ms exceeded.
+   66 |     await investorCard.click();
    67 |     
    68 |     // Mock wallet and connect
    69 |     await mockWallet(page);
@@ -137,7 +136,8 @@ Call log:
    84 |     // Navigate to investor journey
    85 |     await page.getByRole('button', { name: /Next|Continue|Get Started/i }).click();
    86 |     const investorCard = page.locator('a', { hasText: 'Begin Investor Journey' });
-   87 |     await investorCard.click();
+>  87 |     await investorCard.click();
+      |                        ^ Error: locator.click: Test timeout of 30000ms exceeded.
    88 |     
    89 |     // Mock wallet with no balance and connect
    90 |     await mockWallet(page, { hasBalance: false });

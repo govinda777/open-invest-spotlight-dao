@@ -1,4 +1,3 @@
-
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -40,7 +39,7 @@ const App = () => {
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <main role="main">
+          <main role="main" data-testid="main-content">
             <OnboardingDialog 
               open={showOnboarding} 
               onOpenChange={setShowOnboarding} 
