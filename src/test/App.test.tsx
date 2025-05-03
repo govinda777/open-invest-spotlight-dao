@@ -9,8 +9,9 @@ describe('App', () => {
 
   it('renders the main layout', () => {
     render(<App />);
-    // Check if the router is present
-    expect(screen.getByRole('main')).toBeInTheDocument();
+    // Check if the router is present by getting all main elements and checking the first one
+    const mainElements = screen.getAllByRole('main');
+    expect(mainElements[0]).toBeInTheDocument();
   });
 
   it('renders the Toaster components', () => {
