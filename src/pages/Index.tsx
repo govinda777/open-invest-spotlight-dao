@@ -1,8 +1,11 @@
-
+import { useState } from 'react';
 import logo from '@/assets/svg/logo.svg';
 import { Link } from 'react-router-dom';
+import { OnboardingDialog } from '@/components/onboarding/OnboardingDialog';
 
 export default function Index() {
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
   return (
     <div className="flex flex-col min-h-screen">
       <header className="bg-white border-b">
@@ -14,7 +17,12 @@ export default function Index() {
           <div className="hidden md:flex space-x-6">
             <a href="#" className="text-gray-600 hover:text-purple-600 transition-colors">About</a>
             <a href="#" className="text-gray-600 hover:text-purple-600 transition-colors">Projects</a>
-            <Link to="/onboarding" className="text-gray-600 hover:text-purple-600 transition-colors">Get Started</Link>
+            <button 
+              onClick={() => setShowOnboarding(true)} 
+              className="text-gray-600 hover:text-purple-600 transition-colors"
+            >
+              Get Started
+            </button>
             <Link to="/journeys" className="text-gray-600 hover:text-purple-600 transition-colors">User Journeys</Link>
             <a href="#" className="text-gray-600 hover:text-purple-600 transition-colors">Community</a>
           </div>
@@ -25,6 +33,12 @@ export default function Index() {
       </header>
 
       <main>
+        {/* OnboardingDialog */}
+        <OnboardingDialog 
+          open={showOnboarding} 
+          onOpenChange={setShowOnboarding} 
+        />
+
         {/* Hero Section */}
         <section className="bg-gradient-to-br from-purple-500 to-indigo-600 text-white py-24">
           <div className="container mx-auto px-6 text-center">
@@ -36,9 +50,12 @@ export default function Index() {
               <button className="bg-white text-purple-600 font-medium px-6 py-3 rounded-md hover:bg-gray-100 transition-colors">
                 Explore Projects
               </button>
-              <Link to="/onboarding" className="bg-purple-800 text-white font-medium px-6 py-3 rounded-md hover:bg-purple-900 transition-colors">
+              <button 
+                onClick={() => setShowOnboarding(true)} 
+                className="bg-purple-800 text-white font-medium px-6 py-3 rounded-md hover:bg-purple-900 transition-colors"
+              >
                 Get Started
-              </Link>
+              </button>
             </div>
           </div>
         </section>
