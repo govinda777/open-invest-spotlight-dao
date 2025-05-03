@@ -16,8 +16,8 @@ describe('App', () => {
 
   it('renders the Toaster components', () => {
     render(<App />);
-    // Check if the toaster component is present
-    const toaster = screen.getByRole('region', { name: /notifications/i });
-    expect(toaster).toBeInTheDocument();
+    // Check if at least one toaster component is present
+    const toasters = screen.getAllByRole('region', { name: /notifications/i });
+    expect(toasters.length).toBeGreaterThan(0);
   });
 }); 

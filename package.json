@@ -94,7 +94,7 @@
     "eslint": "^9.9.0",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.9",
-    "ethers": "^5.7.2",
+    "ethers": "^6.1.0",
     "globals": "^15.9.0",
     "hardhat": "^2.20.1",
     "jsdom": "^24.0.0",

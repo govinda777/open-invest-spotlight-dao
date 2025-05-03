@@ -46,7 +46,10 @@ cd spotlight-dao
 
 2. Instale as dependências:
 ```bash
-npm install
+# Install and show verbose output
+npm install --verbose --repository-url https://registry.npmjs.org/
+# Install and force the installation
+npm install --force
 ```
 
 ## Desenvolvimento
@@ -63,6 +66,12 @@ npm run test
 
 # Testes E2E
 npm run test:e2e
+```
+
+3. Execute os testes com relatório:
+```bash
+chmod +x run-e2e-with-report.sh
+./run-e2e-with-report.sh
 ```
 
 ## Documentação
