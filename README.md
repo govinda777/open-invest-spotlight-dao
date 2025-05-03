@@ -4,6 +4,14 @@ npx playwright show-report
 
 npx playwright show-report ./playwright-report
 
+npm run report:serve
+
+npm run report:build
+
+npm install --save-dev gh-pages
+
+npm run report:deploy
+
 [![E2E Tests](https://github.com/open-invest/spotlight-dao/actions/workflows/e2e-tests.yml/badge.svg)](https://github.com/open-invest/spotlight-dao/actions/workflows/e2e-tests.yml)
 [![Test Coverage](https://codecov.io/gh/open-invest/spotlight-dao/branch/main/graph/badge.svg)](https://codecov.io/gh/open-invest/spotlight-dao)
 
