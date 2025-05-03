@@ -2,14 +2,14 @@ import { PlaywrightTestConfig, devices } from '@playwright/test';
 
 const config: PlaywrightTestConfig = {
   testDir: './tests/e2e',
-  timeout: 60 * 1000,
+  timeout: 30 * 1000,
   expect: {
-    timeout: 10000
+    timeout: 5000
   },
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 4 : undefined,
+  workers: process.env.CI ? 4 : 4,
   reporter: [
     ['html', { 
       outputFolder: 'playwright-report',
@@ -36,11 +36,19 @@ const config: PlaywrightTestConfig = {
     launchOptions: {
       slowMo: 0,
     },
+    bypassCSP: true,
+    ignoreHTTPSErrors: true,
+    javaScriptEnabled: true,
+    acceptDownloads: true,
   },
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: { 
+        ...devices['Desktop Chrome'],
+        headless: true,
+        args: ['--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage']
+      },
     },
   ],
 };

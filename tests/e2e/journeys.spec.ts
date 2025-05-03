@@ -2,15 +2,17 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Journey System', () => {
   test.beforeEach(async ({ page }) => {
-    // Clear localStorage and set first visit flag
-    await page.evaluate(() => {
-      localStorage.clear();
-      localStorage.setItem('hasVisitedBefore', 'false');
+    // Configuração mais robusta do localStorage
+    await page.addInitScript(() => {
+      window.localStorage.clear();
+      window.localStorage.setItem('hasVisitedBefore', 'false');
     });
     
-    // Go to home page and wait for it to load
-    await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    // Go to home page with timeout reduzido
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
+    
+    // Espera mais específica para elementos críticos
+    await page.waitForSelector('body', { state: 'visible' });
   });
 
   test('should navigate through onboarding dialog', async ({ page }) => {
