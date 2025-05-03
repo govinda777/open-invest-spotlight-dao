@@ -1,75 +1,334 @@
-# Guia de Jornadas do Usuário
+# Jornadas do Usuário
 
-Este documento explica como gerenciar as jornadas do usuário no Open Invest Spotlight DAO.
+## Visão Geral
 
-## Estrutura das Jornadas
+O Open Invest Spotlight DAO oferece diferentes jornadas de usuário, cada uma adaptada para um tipo específico de usuário. Este documento detalha os fluxos e funcionalidades disponíveis para cada jornada.
 
-As jornadas são definidas no arquivo `src/journeys/map.ts` e seguem a seguinte estrutura:
+## Jornadas Definidas
 
-### Tipos
+As jornadas são definidas no arquivo `src/journeys/map.ts` e são utilizadas pelo componente `JourneyViewer` para renderizar os fluxos de usuário.
+
+### 1. Onboarding
 
 ```typescript
-type JourneyStep = {
-  id: string;          // Identificador único do passo
-  title: string;       // Título exibido ao usuário
-  description: string; // Descrição do passo
-  nextSteps: string[]; // IDs dos próximos passos possíveis
-  paywall?: boolean;   // Se o passo requer acesso premium
-};
-
-type Journey = {
-  id: string;          // Identificador único da jornada
-  label: string;       // Nome exibido da jornada
-  steps: JourneyStep[]; // Lista de passos da jornada
+const onboardingJourney: Journey = {
+  id: 'onboarding',
+  title: 'Bem-vindo ao Open Invest',
+  steps: [
+    {
+      id: 'welcome',
+      title: 'Boas-vindas',
+      component: WelcomeStep,
+    },
+    {
+      id: 'select-journey',
+      title: 'Escolha sua Jornada',
+      component: JourneySelector,
+    },
+    {
+      id: 'understand-platform',
+      title: 'Entenda a Plataforma',
+      component: PlatformOverview,
+    },
+    {
+      id: 'set-notifications',
+      title: 'Configure Notificações',
+      component: NotificationSettings,
+    },
+    {
+      id: 'paywall',
+      title: 'Acesso Premium',
+      component: JourneyPaywall,
+    },
+  ],
 };
 ```
 
-## Como Adicionar uma Nova Jornada
-
-1. Abra o arquivo `src/journeys/map.ts`
-2. Adicione um novo objeto `Journey` ao array `journeys`
-3. Defina os passos da jornada usando o tipo `JourneyStep`
-4. Certifique-se de que os IDs dos passos são únicos
-5. Defina os `nextSteps` corretamente para criar o fluxo desejado
-
-## Como Adicionar um Novo Passo
-
-1. Dentro da jornada desejada, adicione um novo objeto `JourneyStep` ao array `steps`
-2. Defina um ID único para o passo
-3. Adicione o ID do novo passo aos `nextSteps` do passo anterior
-4. Se necessário, marque o passo como `paywall: true`
-
-## Exemplo de Uso nos Componentes
+### 2. Investidor
 
 ```typescript
-import { journeys } from '@/journeys/map';
+const investorJourney: Journey = {
+  id: 'investor',
+  title: 'Jornada do Investidor',
+  steps: [
+    {
+      id: 'discover-projects',
+      title: 'Descubra Projetos',
+      component: ProjectDiscovery,
+    },
+    {
+      id: 'research',
+      title: 'Pesquise Oportunidades',
+      component: InvestmentResearch,
+    },
+    {
+      id: 'invest',
+      title: 'Realize Investimentos',
+      component: InvestmentFlow,
+    },
+    {
+      id: 'monitor',
+      title: 'Monitore Performance',
+      component: PortfolioTracker,
+    },
+    {
+      id: 'governance',
+      title: 'Participe da Governança',
+      component: GovernanceParticipation,
+    },
+  ],
+};
+```
 
-// Encontrar uma jornada específica
-const journey = journeys.find(j => j.id === 'onboarding');
+### 3. Proprietário de Projeto
 
-// Encontrar um passo específico
-const step = journey.steps.find(s => s.id === 'welcome');
+```typescript
+const projectOwnerJourney: Journey = {
+  id: 'project-owner',
+  title: 'Jornada do Proprietário',
+  steps: [
+    {
+      id: 'submit-project',
+      title: 'Submeta seu Projeto',
+      component: ProjectSubmission,
+    },
+    {
+      id: 'community-feedback',
+      title: 'Receba Feedback',
+      component: CommunityFeedback,
+    },
+    {
+      id: 'launch',
+      title: 'Lance seu Projeto',
+      component: ProjectLaunch,
+    },
+    {
+      id: 'development',
+      title: 'Desenvolva seu Projeto',
+      component: ProjectDevelopment,
+    },
+    {
+      id: 'report-progress',
+      title: 'Reporte Progresso',
+      component: ProgressReporting,
+    },
+  ],
+};
+```
 
-// Verificar se o passo requer acesso premium
-if (step.paywall && !userHasAccess) {
-  // Renderizar paywall
+### 4. Membro DAO
+
+```typescript
+const daoMemberJourney: Journey = {
+  id: 'dao-member',
+  title: 'Jornada do Membro DAO',
+  steps: [
+    {
+      id: 'enter-dao',
+      title: 'Entre na DAO',
+      component: DAOEntry,
+    },
+    {
+      id: 'participate',
+      title: 'Participe de Discussões',
+      component: DiscussionParticipation,
+    },
+    {
+      id: 'vote',
+      title: 'Vote em Propostas',
+      component: ProposalVoting,
+    },
+    {
+      id: 'influence',
+      title: 'Influencie a Direção',
+      component: DAOInfluence,
+    },
+    {
+      id: 'rewards',
+      title: 'Receba Recompensas',
+      component: RewardSystem,
+    },
+  ],
+};
+```
+
+## Implementação
+
+### JourneyViewer Component
+
+```typescript
+interface JourneyViewerProps {
+  journey: Journey;
+  currentStep: number;
+  onStepChange: (step: number) => void;
 }
+
+export const JourneyViewer: React.FC<JourneyViewerProps> = ({
+  journey,
+  currentStep,
+  onStepChange,
+}) => {
+  const CurrentStep = journey.steps[currentStep].component;
+
+  return (
+    <div className="journey-viewer">
+      <JourneyProgress
+        steps={journey.steps}
+        currentStep={currentStep}
+        onStepChange={onStepChange}
+      />
+      <div className="journey-content">
+        <CurrentStep />
+      </div>
+    </div>
+  );
+};
+```
+
+### JourneyPaywall Component
+
+```typescript
+interface JourneyPaywallProps {
+  onUpgrade: () => void;
+  onSkip: () => void;
+}
+
+export const JourneyPaywall: React.FC<JourneyPaywallProps> = ({
+  onUpgrade,
+  onSkip,
+}) => {
+  return (
+    <div className="journey-paywall">
+      <h2>Acesso Premium</h2>
+      <p>Desbloqueie recursos exclusivos</p>
+      <div className="paywall-features">
+        <ul>
+          <li>Análises detalhadas</li>
+          <li>Relatórios exclusivos</li>
+          <li>Suporte prioritário</li>
+        </ul>
+      </div>
+      <div className="paywall-actions">
+        <button onClick={onUpgrade}>Upgrade</button>
+        <button onClick={onSkip}>Pular</button>
+      </div>
+    </div>
+  );
+};
 ```
 
 ## Boas Práticas
 
-1. Mantenha os IDs dos passos e jornadas únicos
-2. Sempre defina `nextSteps` para criar um fluxo lógico
-3. Use `paywall: true` apenas quando necessário
-4. Mantenha as descrições claras e concisas
-5. Teste o fluxo completo após fazer alterações
+### 1. Organização de Jornadas
 
-## Testes
+- Agrupar por tipo de usuário
+- Manter fluxos lógicos
+- Incluir pontos de decisão
+- Permitir navegação flexível
 
-Antes de implementar uma nova jornada ou passo:
+### 2. Navegação
 
-1. Verifique se todos os IDs são únicos
-2. Confirme que o fluxo faz sentido lógico
-3. Teste o acesso com e sem paywall
-4. Verifique se não há passos sem saída
-5. Teste a navegação entre todos os passos 
+```typescript
+// Exemplo de navegação
+const navigateJourney = (journeyId: string, stepId: string) => {
+  const journey = journeys.find(j => j.id === journeyId);
+  const stepIndex = journey.steps.findIndex(s => s.id === stepId);
+  
+  setCurrentJourney(journey);
+  setCurrentStep(stepIndex);
+};
+```
+
+### 3. Paywall
+
+```typescript
+// Exemplo de verificação de acesso
+const checkAccess = (journey: Journey, step: number) => {
+  const currentStep = journey.steps[step];
+  
+  if (currentStep.requiresPremium && !user.isPremium) {
+    return false;
+  }
+  
+  return true;
+};
+```
+
+### 4. Testes
+
+```typescript
+// Exemplo de teste de jornada
+test('should complete investor journey', async () => {
+  const { getByText, getByTestId } = render(<JourneyViewer journey={investorJourney} />);
+  
+  // Navegação
+  await userEvent.click(getByText('Próximo'));
+  expect(getByTestId('current-step')).toHaveTextContent('Pesquise Oportunidades');
+  
+  // Interação
+  await userEvent.type(getByTestId('search-input'), 'blockchain');
+  await userEvent.click(getByTestId('search-button'));
+  
+  // Verificação
+  expect(getByTestId('results')).toBeInTheDocument();
+});
+```
+
+## Exemplos de Uso
+
+### Navegando entre Passos
+
+```typescript
+const App = () => {
+  const [currentJourney, setCurrentJourney] = useState(journeys[0]);
+  const [currentStep, setCurrentStep] = useState(0);
+  
+  const handleNext = () => {
+    if (currentStep < currentJourney.steps.length - 1) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+  
+  const handlePrevious = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+  
+  return (
+    <JourneyViewer
+      journey={currentJourney}
+      currentStep={currentStep}
+      onStepChange={setCurrentStep}
+    />
+  );
+};
+```
+
+### Verificando Acesso ao Paywall
+
+```typescript
+const StepWrapper = ({ step, children }) => {
+  const { user } = useAuth();
+  
+  if (step.requiresPremium && !user.isPremium) {
+    return <JourneyPaywall onUpgrade={handleUpgrade} onSkip={handleSkip} />;
+  }
+  
+  return children;
+};
+```
+
+## Próximos Passos
+
+### 1. Expansão de Jornadas
+
+- Adicionar novas jornadas
+- Refinar fluxos existentes
+- Implementar personalização
+
+### 2. Melhorias
+
+- Análise de dados de uso
+- Otimização de conversão
+- Integração com analytics 

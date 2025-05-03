@@ -50,7 +50,7 @@ jobs:
 
     - name: Generate Test Coverage Badge
       run: |
-        echo "::set-output name=coverage::$(cat test-results/coverage.txt)"
+        echo "coverage=$(cat test-results/coverage.txt)" >> $GITHUB_OUTPUT
       id: coverage
 
     - name: Update README with Test Coverage
