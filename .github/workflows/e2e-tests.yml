@@ -46,4 +46,19 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: test-results
-        path: test-results/ 
+        path: test-results/
+
+    - name: Generate Test Coverage Badge
+      run: |
+        echo "::set-output name=coverage::$(cat test-results/coverage.txt)"
+      id: coverage
+
+    - name: Update README with Test Coverage
+      uses: EndBug/add-and-commit@v9
+      with:
+        author_name: 'GitHub Action'
+        author_email: 'action@github.com'
+        message: 'Update test coverage badge'
+        add: 'README.md'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 

@@ -1,9 +1,8 @@
 import { Page } from '@playwright/test';
 
 export const waitForAppLoad = async (page: Page) => {
-  // Wait for the main content to be visible and network to be idle
-  await page.waitForLoadState('networkidle');
-  await page.waitForSelector('main', { timeout: 10000 });
+  // Wait for the main content to be visible
+  await page.waitForSelector('main', { timeout: 5000 });
 };
 
 export const mockWallet = async (page: Page, options = { hasBalance: true }) => {
@@ -32,22 +31,17 @@ export const clearLocalStorage = async (page: Page) => {
 export const completeOnboardingSteps = async (page: Page, steps = 1) => {
   for (let i = 0; i < steps; i++) {
     await page.getByRole('button', { name: /Next|Continue|Complete/i }).click();
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(500); // Wait for animations
+    await page.waitForSelector('main');
   }
 };
 
 export const selectUserType = async (page: Page, userType: 'Investor' | 'Project Owner' | 'DAO Member' | 'Community Member') => {
-  // Wait for the card to be visible
-  await page.waitForSelector(`text=${userType}`);
-  
   // Click the user type text first
   await page.getByText(userType).click();
   
   // Then click the button to begin the journey
   await page.getByRole('button', { name: `Begin ${userType} Journey` }).click();
   
-  // Wait for navigation and animations
-  await page.waitForLoadState('networkidle');
-  await page.waitForTimeout(500);
+  // Wait for main content to be visible
+  await page.waitForSelector('main');
 }; 

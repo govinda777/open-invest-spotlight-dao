@@ -1,5 +1,8 @@
 # Welcome to your Lovable project
 
+![E2E Tests](https://github.com/your-username/open-invest-spotlight-dao/actions/workflows/e2e-tests.yml/badge.svg)
+![Test Coverage](https://img.shields.io/badge/coverage-${COVERAGE}%25-brightgreen)
+
 ## Project info
 
 **URL**: https://lovable.dev/projects/d3795278-5d82-4dca-8eb4-794df4689bb7

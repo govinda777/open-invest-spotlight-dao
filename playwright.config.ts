@@ -2,14 +2,14 @@ import { PlaywrightTestConfig, devices } from '@playwright/test';
 
 const config: PlaywrightTestConfig = {
   testDir: './tests/e2e',
-  timeout: 120 * 1000,
+  timeout: 60 * 1000,
   expect: {
-    timeout: 20000
+    timeout: 10000
   },
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 4 : undefined,
   reporter: [
     ['html', { 
       outputFolder: 'playwright-report',
@@ -34,7 +34,7 @@ const config: PlaywrightTestConfig = {
     baseURL: 'http://localhost:8080',
     viewport: { width: 1280, height: 720 },
     launchOptions: {
-      slowMo: 100,
+      slowMo: 0,
     },
   },
   projects: [

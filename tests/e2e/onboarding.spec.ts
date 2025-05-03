@@ -63,25 +63,48 @@ test.describe('Onboarding Flow', () => {
   });
 
   test('should handle insufficient funds for contribution', async ({ page }) => {
+    console.log('Starting insufficient funds test...');
+    
     await page.goto('/onboarding');
+    console.log('Navigated to onboarding page');
     await waitForAppLoad(page);
     
     // Navigate through welcome step
-    await page.getByRole('button', { name: /Next|Continue|Get Started/i }).click();
-    await page.waitForLoadState('networkidle');
+    const nextButton = page.getByRole('button', { name: /Next|Continue|Get Started/i });
+    console.log('Looking for next button...');
+    await expect(nextButton).toBeVisible();
+    await nextButton.click();
+    console.log('Clicked next button');
+    await page.waitForLoadState('networkidle', { timeout: 10000 });
     
     // Select investor journey
+    console.log('Selecting investor journey...');
     await selectUserType(page, 'Investor');
     
     // Mock wallet with no balance and connect
+    console.log('Mocking wallet with no balance...');
     await mockWallet(page, { hasBalance: false });
-    await page.getByRole('button', { name: /Connect.*Wallet/i }).click();
-    await page.waitForLoadState('networkidle');
+    
+    const connectButton = page.getByRole('button', { name: /Connect.*Wallet/i });
+    console.log('Looking for connect wallet button...');
+    await expect(connectButton).toBeVisible();
+    await connectButton.click();
+    console.log('Clicked connect wallet button');
+    await page.waitForLoadState('networkidle', { timeout: 10000 });
     
     // Attempt contribution
-    await page.getByRole('button', { name: /Contribute/i }).click();
-    await page.waitForLoadState('networkidle');
-    await expect(page.getByText(/Insufficient funds/i)).toBeVisible();
+    const contributeButton = page.getByRole('button', { name: /Contribute/i });
+    console.log('Looking for contribute button...');
+    await expect(contributeButton).toBeVisible();
+    await contributeButton.click();
+    console.log('Clicked contribute button');
+    await page.waitForLoadState('networkidle', { timeout: 10000 });
+    
+    // Wait for error message
+    console.log('Waiting for insufficient funds message...');
+    const errorMessage = page.getByText(/Insufficient funds/i);
+    await expect(errorMessage).toBeVisible({ timeout: 10000 });
+    console.log('Test completed successfully');
   });
 
   test('should persist onboarding progress', async ({ page }) => {
