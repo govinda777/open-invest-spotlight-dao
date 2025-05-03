@@ -8,12 +8,12 @@
 ```
 Error: Timed out 5000ms waiting for expect(locator).toBeVisible()
 
-Locator: getByRole('heading', { name: /Welcome to Open Invest DAO/ })
+Locator: getByRole('heading', { name: 'Welcome to Open Invest DAO' })
 Expected: visible
 Received: <element(s) not found>
 Call log:
   - expect.toBeVisible with timeout 5000ms
-  - waiting for getByRole('heading', { name: /Welcome to Open Invest DAO/ })
+  - waiting for getByRole('heading', { name: 'Welcome to Open Invest DAO' })
 
     at /Users/gosouza/projetos-p/open-invest-spotlight-dao/tests/e2e/journeys.spec.ts:20:85
 ```
@@ -144,14 +144,14 @@ Call log:
    17 |
    18 |   test('should navigate through onboarding dialog', async ({ page }) => {
    19 |     // Verifica elementos críticos com timeout reduzido
->  20 |     await expect(page.getByRole('heading', { name: /Welcome to Open Invest DAO/ })).toBeVisible();
+>  20 |     await expect(page.getByRole('heading', { name: 'Welcome to Open Invest DAO' })).toBeVisible();
       |                                                                                     ^ Error: Timed out 5000ms waiting for expect(locator).toBeVisible()
    21 |     
    22 |     // Step 1: Choose Journey
-   23 |     await page.getByRole('button', { name: /Next/ }).click();
+   23 |     await page.getByRole('button', { name: 'Next' }).click();
    24 |     
    25 |     // Step 2: How It Works
-   26 |     await page.getByRole('button', { name: /Next/ }).click();
+   26 |     await page.getByRole('button', { name: 'Next' }).click();
    27 |     
    28 |     // Step 3: Ready to Start
    29 |     await expect(page.getByRole('button', { name: 'Get Started' })).toBeVisible();
@@ -165,11 +165,11 @@ Call log:
    37 |   test('should show progress indicators', async ({ page }) => {
    38 |     const progressDots = await page.locator('.h-2.w-2.rounded-full').count();
    39 |     expect(progressDots).toBe(3);
-   40 |     await page.getByRole('button', { name: /Next/ }).click();
+   40 |     await page.getByRole('button', { name: 'Next' }).click();
    41 |   });
    42 |
    43 |   test('should allow navigation between steps', async ({ page }) => {
-   44 |     await page.getByRole('button', { name: /Next/ }).click();
+   44 |     await page.getByRole('button', { name: 'Next' }).click();
    45 |     await page.getByRole('button', { name: 'Previous' }).click();
    46 |   });
    47 |
@@ -182,68 +182,68 @@ Call log:
    54 |     await page.goto('/onboarding', { waitUntil: 'networkidle' });
    55 |     
    56 |     // Verify how it works section using more specific selectors
-   57 |     await expect(page.getByRole('heading', { name: 'How Open Invest DAO Works' })).toBeVisible();
+   57 |     await expect(page.getByRole('heading', { name: 'How It Works' })).toBeVisible();
    58 |     
    59 |     // Verify steps using more specific selectors
    60 |     const steps = [
    61 |       'Connect Your Wallet',
-   62 |       'Complete Verification',
-   63 |       'Make Initial Contribution',
-   64 |       'Participate in Governance',
-   65 |       'Receive Benefits'
-   66 |     ];
-   67 |     
-   68 |     for (const step of steps) {
-   69 |       await expect(page.getByRole('heading', { name: step, exact: true })).toBeVisible();
-   70 |     }
-   71 |   });
-   72 |
-   73 |   test('should show FAQ section', async ({ page }) => {
-   74 |     await page.goto('/onboarding', { waitUntil: 'networkidle' });
-   75 |     
-   76 |     // Verify FAQ section using more specific selectors
-   77 |     await expect(page.getByRole('heading', { name: 'Frequently Asked Questions' })).toBeVisible();
-   78 |     
-   79 |     // Click and verify FAQ content using more specific selectors
-   80 |     const whatIsDao = page.getByRole('button', { name: 'What is a DAO?' });
-   81 |     await whatIsDao.click();
-   82 |     await expect(page.getByText('A Decentralized Autonomous Organization', { exact: false })).toBeVisible();
-   83 |     
-   84 |     const governanceTokens = page.getByRole('button', { name: 'How do governance tokens work?' });
-   85 |     await governanceTokens.click();
-   86 |     await expect(page.getByText('Governance tokens represent your stake', { exact: false })).toBeVisible();
-   87 |   });
-   88 |
-   89 |   test('should complete onboarding journey as investor', async ({ page }) => {
-   90 |     await page.goto('/onboarding', { waitUntil: 'networkidle' });
-   91 |     
-   92 |     // Select investor journey
-   93 |     await page.getByText('Investor').click();
-   94 |     await page.getByRole('button', { name: 'Begin Investor Journey' }).click();
-   95 |     
-   96 |     // Complete welcome step
-   97 |     await expect(page.getByText('Welcome to Open Invest DAO')).toBeVisible();
-   98 |     await page.getByRole('button', { name: 'Next' }).click();
-   99 |     
-  100 |     // Complete choose journey step
-  101 |     await expect(page.getByText('Choose Your Journey')).toBeVisible();
-  102 |     await page.getByRole('button', { name: 'Next' }).click();
-  103 |     
-  104 |     // Complete how it works step
-  105 |     await expect(page.getByText('How Open Invest DAO Works')).toBeVisible();
-  106 |     await page.getByRole('button', { name: 'Next' }).click();
-  107 |     
-  108 |     // Verify paywall appears
-  109 |     await expect(page.getByText('Unlock Advanced Investor Features')).toBeVisible();
-  110 |     await expect(page.getByText('Price: 0.05 ETH')).toBeVisible();
-  111 |     
-  112 |     // Purchase NFT
-  113 |     await page.getByRole('button', { name: 'Purchase Investor NFT' }).click();
-  114 |     await expect(page.getByText('NFT purchased successfully!')).toBeVisible();
-  115 |     
-  116 |     // Verify subscription timer appears
-  117 |     await expect(page.getByText('Active Subscription')).toBeVisible();
-  118 |     await expect(page.getByText('30 days remaining')).toBeVisible();
-  119 |   });
-  120 |
+   62 |       'Make Initial Contribution',
+   63 |       'Participate in Governance'
+   64 |     ];
+   65 |     
+   66 |     for (const step of steps) {
+   67 |       await expect(page.getByText(step)).toBeVisible();
+   68 |     }
+   69 |   });
+   70 |
+   71 |   test('should show FAQ section', async ({ page }) => {
+   72 |     await page.goto('/onboarding', { waitUntil: 'networkidle' });
+   73 |     
+   74 |     // Verify FAQ section using more specific selectors
+   75 |     await expect(page.getByRole('heading', { name: 'User Types' })).toBeVisible();
+   76 |     
+   77 |     // Click and verify FAQ content using more specific selectors
+   78 |     await expect(page.getByText('Investor: Invest in projects')).toBeVisible();
+   79 |     await expect(page.getByText('Project Owner: Submit projects')).toBeVisible();
+   80 |     await expect(page.getByText('DAO Member: Participate in governance')).toBeVisible();
+   81 |     await expect(page.getByText('Community Member: Engage and learn')).toBeVisible();
+   82 |   });
+   83 |
+   84 |   test('should complete onboarding journey as investor', async ({ page }) => {
+   85 |     await page.goto('/onboarding', { waitUntil: 'networkidle' });
+   86 |     
+   87 |     // Select investor journey
+   88 |     await page.getByRole('heading', { name: 'Investor' }).click();
+   89 |     await page.getByText('Invest in innovative projects').click();
+   90 |     
+   91 |     // Complete welcome step
+   92 |     await expect(page.getByText('Welcome to Open Invest DAO')).toBeVisible();
+   93 |     await page.getByRole('button', { name: 'Next' }).click();
+   94 |     
+   95 |     // Complete how it works step
+   96 |     await expect(page.getByText('How It Works')).toBeVisible();
+   97 |     await page.getByRole('button', { name: 'Next' }).click();
+   98 |     
+   99 |     // Complete ready to start step
+  100 |     await expect(page.getByText('Ready to Start?')).toBeVisible();
+  101 |     await page.getByRole('button', { name: 'Get Started' }).click();
+  102 |   });
+  103 |
+  104 |   test('should block access to final step without NFT purchase', async ({ page }) => {
+  105 |     await page.goto('/onboarding', { waitUntil: 'networkidle' });
+  106 |     
+  107 |     // Select investor journey
+  108 |     await page.getByRole('heading', { name: 'Investor' }).click();
+  109 |     await page.getByText('Invest in innovative projects').click();
+  110 |     
+  111 |     // Complete welcome step
+  112 |     await expect(page.getByText('Welcome to Open Invest DAO')).toBeVisible();
+  113 |     await page.getByRole('button', { name: 'Next' }).click();
+  114 |     
+  115 |     // Complete how it works step
+  116 |     await expect(page.getByText('How It Works')).toBeVisible();
+  117 |     await page.getByRole('button', { name: 'Next' }).click();
+  118 |     
+  119 |     // Verify ready to start step is not accessible
+  120 |     await expect(page.getByText('Ready to Start?')).not.toBeVisible();
 ```

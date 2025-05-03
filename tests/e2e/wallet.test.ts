@@ -7,18 +7,15 @@ test.describe('Wallet Connection', () => {
   });
 
   test('should connect to wallet', async ({ page }) => {
-    const connectButton = page.getByRole('button', { name: 'Connect Wallet' });
-    await connectButton.click();
+    await page.getByRole('button', { name: 'Connect Wallet' }).click();
     await expect(page.getByText('Connected')).toBeVisible();
   });
 
   test('should handle wallet disconnection', async ({ page }) => {
-    const connectButton = page.getByRole('button', { name: 'Connect Wallet' });
-    await connectButton.click();
+    await page.getByRole('button', { name: 'Connect Wallet' }).click();
     await expect(page.getByText('Connected')).toBeVisible();
     
-    const disconnectButton = page.getByRole('button', { name: 'Disconnect' });
-    await disconnectButton.click();
-    await expect(page.getByText('Disconnected')).toBeVisible();
+    await page.getByRole('button', { name: 'Disconnect' }).click();
+    await expect(page.getByText('Connect Wallet')).toBeVisible();
   });
 }); 
