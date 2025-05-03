@@ -1,0 +1,36 @@
+name: Publish Allure Report
+
+on:
+  push:
+    branches: [main] # Altere para a branch principal do seu projeto, se necessário
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js # Altere para o ambiente do seu projeto (Node, Python, Java, etc)
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci # Altere para o comando de instalação do seu projeto
+
+      - name: Run tests and generate Allure results
+        run: |
+          npm test # Altere para o comando que executa seus testes e gera allure-results
+
+      - name: Install Allure commandline
+        run: npm install -g allure-commandline
+
+      - name: Generate Allure report
+        run: allure generate allure-results --clean -o allure-report
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./allure-report

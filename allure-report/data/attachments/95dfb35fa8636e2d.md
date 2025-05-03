@@ -1,0 +1,246 @@
+# Test info
+
+- Name: Journey System >> should navigate through onboarding dialog
+- Location: /Users/gosouza/projetos-p/open-invest-spotlight-dao/tests/e2e/journeys.spec.ts:15:3
+
+# Error details
+
+```
+Error: Timed out 2000ms waiting for expect(locator).toBeVisible()
+
+Locator: getByRole('heading', { name: /Welcome to Open Invest DAO/ })
+Expected: visible
+Received: <element(s) not found>
+Call log:
+  - expect.toBeVisible with timeout 2000ms
+  - waiting for getByRole('heading', { name: /Welcome to Open Invest DAO/ })
+
+    at /Users/gosouza/projetos-p/open-invest-spotlight-dao/tests/e2e/journeys.spec.ts:17:85
+```
+
+# Page snapshot
+
+```yaml
+- region "Notifications (F8)":
+  - list
+- main:
+  - navigation:
+    - img "Logo"
+    - text: Open Invest DAO
+    - link "About":
+      - /url: "#"
+    - link "Projects":
+      - /url: "#"
+    - button "Get Started"
+    - link "User Journeys":
+      - /url: /journeys
+    - link "Community":
+      - /url: "#"
+    - button "Connect Wallet"
+  - main:
+    - heading "Open Invest Spotlight DAO" [level=1]
+    - paragraph: A decentralized platform for collaborative investment in innovative blockchain projects
+    - button "Explore Projects"
+    - button "Get Started"
+    - heading "Key Features" [level=2]
+    - img
+    - heading "Decentralized Funding" [level=3]
+    - paragraph: Access capital through community-driven investment without traditional intermediaries.
+    - img
+    - heading "Community Governance" [level=3]
+    - paragraph: Participate in democratic decision-making that shapes the platform's future.
+    - img
+    - heading "Transparent Investing" [level=3]
+    - paragraph: All investments and decisions are recorded on blockchain for complete transparency.
+    - img
+    - heading "Portfolio Growth" [level=3]
+    - paragraph: Diversify your investments across multiple innovative blockchain projects.
+    - link "Explore User Journeys":
+      - /url: /journeys
+      - text: Explore User Journeys
+      - img
+    - heading "How It Works" [level=2]
+    - text: "1"
+    - heading "Connect & Discover" [level=3]
+    - paragraph: Connect your wallet and explore innovative blockchain projects seeking investment.
+    - text: "2"
+    - heading "Invest & Vote" [level=3]
+    - paragraph: Invest in projects you believe in and participate in governance decisions.
+    - text: "3"
+    - heading "Earn & Grow" [level=3]
+    - paragraph: Receive returns on successful projects and grow your investment portfolio.
+    - heading "Ready to start your journey?" [level=2]
+    - paragraph: Join our community today and be part of the decentralized investment revolution.
+    - link "Start Onboarding":
+      - /url: /onboarding
+    - link "View User Journeys":
+      - /url: /journeys
+  - heading "Open Invest DAO" [level=3]
+  - paragraph: Decentralized investment platform for innovative blockchain projects.
+  - heading "Quick Links" [level=3]
+  - list:
+    - listitem:
+      - link "About":
+        - /url: "#"
+    - listitem:
+      - link "Projects":
+        - /url: "#"
+    - listitem:
+      - link "User Journeys":
+        - /url: /journeys
+    - listitem:
+      - link "Governance":
+        - /url: "#"
+  - heading "Resources" [level=3]
+  - list:
+    - listitem:
+      - link "Documentation":
+        - /url: "#"
+    - listitem:
+      - link "FAQ":
+        - /url: "#"
+    - listitem:
+      - link "Community":
+        - /url: "#"
+    - listitem:
+      - link "Support":
+        - /url: "#"
+  - heading "Connect" [level=3]
+  - list:
+    - listitem:
+      - link "Twitter":
+        - /url: "#"
+    - listitem:
+      - link "Discord":
+        - /url: "#"
+    - listitem:
+      - link "Telegram":
+        - /url: "#"
+    - listitem:
+      - link "Medium":
+        - /url: "#"
+  - paragraph: © 2025 Open Invest DAO. All rights reserved.
+```
+
+# Test source
+
+```ts
+   1 | import { test, expect } from '@playwright/test';
+   2 |
+   3 | test.describe('Journey System', () => {
+   4 |   test.beforeEach(async ({ page }) => {
+   5 |     // Configuração mais robusta do localStorage
+   6 |     await page.addInitScript(() => {
+   7 |       window.localStorage.clear();
+   8 |       window.localStorage.setItem('hasVisitedBefore', 'false');
+   9 |     });
+   10 |     
+   11 |     // Go to home page com timeout mínimo e waitUntil otimizado
+   12 |     await page.goto('/', { waitUntil: 'domcontentloaded' });
+   13 |   });
+   14 |
+   15 |   test('should navigate through onboarding dialog', async ({ page }) => {
+   16 |     // Verifica elementos críticos com timeout reduzido
+>  17 |     await expect(page.getByRole('heading', { name: /Welcome to Open Invest DAO/ })).toBeVisible();
+      |                                                                                     ^ Error: Timed out 2000ms waiting for expect(locator).toBeVisible()
+   18 |     
+   19 |     // Step 1: Choose Journey
+   20 |     await page.getByRole('button', { name: /Next/ }).click();
+   21 |     
+   22 |     // Step 2: How It Works
+   23 |     await page.getByRole('button', { name: /Next/ }).click();
+   24 |     
+   25 |     // Step 3: Ready to Start
+   26 |     await expect(page.getByRole('button', { name: 'Get Started' })).toBeVisible();
+   27 |   });
+   28 |
+   29 |   test('should show all user types in popover', async ({ page }) => {
+   30 |     await page.getByRole('button', { name: 'Learn about all user types' }).click();
+   31 |     await expect(page.getByText('Investor: Invest in projects')).toBeVisible();
+   32 |   });
+   33 |
+   34 |   test('should show progress indicators', async ({ page }) => {
+   35 |     const progressDots = await page.locator('.h-2.w-2.rounded-full').count();
+   36 |     expect(progressDots).toBe(3);
+   37 |     await page.getByRole('button', { name: /Next/ }).click();
+   38 |   });
+   39 |
+   40 |   test('should allow navigation between steps', async ({ page }) => {
+   41 |     await page.getByRole('button', { name: /Next/ }).click();
+   42 |     await page.getByRole('button', { name: 'Previous' }).click();
+   43 |   });
+   44 |
+   45 |   test('should show all journey options', async ({ page }) => {
+   46 |     await page.goto('/onboarding', { waitUntil: 'domcontentloaded' });
+   47 |     await expect(page.getByRole('heading', { name: 'Investor' })).toBeVisible();
+   48 |   });
+   49 |
+   50 |   test('should show how it works section', async ({ page }) => {
+   51 |     await page.goto('/onboarding', { waitUntil: 'domcontentloaded' });
+   52 |     
+   53 |     // Verify how it works section using more specific selectors
+   54 |     await expect(page.getByRole('heading', { name: 'How Open Invest DAO Works' })).toBeVisible();
+   55 |     
+   56 |     // Verify steps using more specific selectors
+   57 |     const steps = [
+   58 |       'Connect Your Wallet',
+   59 |       'Complete Verification',
+   60 |       'Make Initial Contribution',
+   61 |       'Participate in Governance',
+   62 |       'Receive Benefits'
+   63 |     ];
+   64 |     
+   65 |     for (const step of steps) {
+   66 |       await expect(page.getByRole('heading', { name: step, exact: true })).toBeVisible();
+   67 |     }
+   68 |   });
+   69 |
+   70 |   test('should show FAQ section', async ({ page }) => {
+   71 |     await page.goto('/onboarding', { waitUntil: 'domcontentloaded' });
+   72 |     
+   73 |     // Verify FAQ section using more specific selectors
+   74 |     await expect(page.getByRole('heading', { name: 'Frequently Asked Questions' })).toBeVisible();
+   75 |     
+   76 |     // Click and verify FAQ content using more specific selectors
+   77 |     const whatIsDao = page.getByRole('button', { name: 'What is a DAO?' });
+   78 |     await whatIsDao.click();
+   79 |     await expect(page.getByText('A Decentralized Autonomous Organization', { exact: false })).toBeVisible();
+   80 |     
+   81 |     const governanceTokens = page.getByRole('button', { name: 'How do governance tokens work?' });
+   82 |     await governanceTokens.click();
+   83 |     await expect(page.getByText('Governance tokens represent your stake', { exact: false })).toBeVisible();
+   84 |   });
+   85 |
+   86 |   test('should complete onboarding journey as investor', async ({ page }) => {
+   87 |     await page.goto('/onboarding', { waitUntil: 'domcontentloaded' });
+   88 |     
+   89 |     // Select investor journey
+   90 |     await page.getByText('Investor').click();
+   91 |     await page.getByRole('button', { name: 'Begin Investor Journey' }).click();
+   92 |     
+   93 |     // Complete welcome step
+   94 |     await expect(page.getByText('Welcome to Open Invest DAO')).toBeVisible();
+   95 |     await page.getByRole('button', { name: 'Next' }).click();
+   96 |     
+   97 |     // Complete choose journey step
+   98 |     await expect(page.getByText('Choose Your Journey')).toBeVisible();
+   99 |     await page.getByRole('button', { name: 'Next' }).click();
+  100 |     
+  101 |     // Complete how it works step
+  102 |     await expect(page.getByText('How Open Invest DAO Works')).toBeVisible();
+  103 |     await page.getByRole('button', { name: 'Next' }).click();
+  104 |     
+  105 |     // Verify paywall appears
+  106 |     await expect(page.getByText('Unlock Advanced Investor Features')).toBeVisible();
+  107 |     await expect(page.getByText('Price: 0.05 ETH')).toBeVisible();
+  108 |     
+  109 |     // Purchase NFT
+  110 |     await page.getByRole('button', { name: 'Purchase Investor NFT' }).click();
+  111 |     await expect(page.getByText('NFT purchased successfully!')).toBeVisible();
+  112 |     
+  113 |     // Verify subscription timer appears
+  114 |     await expect(page.getByText('Active Subscription')).toBeVisible();
+  115 |     await expect(page.getByText('30 days remaining')).toBeVisible();
+  116 |   });
+  117 |
+```

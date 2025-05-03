@@ -1,8 +1,8 @@
 import { Page } from '@playwright/test';
 
 export const waitForAppLoad = async (page: Page) => {
-  // Wait for the main content to be visible
-  await page.waitForSelector('main', { timeout: 5000 });
+  // Wait for the main content to be visible with reduced timeout
+  await page.waitForSelector('main', { timeout: 3000 });
 };
 
 export const mockWallet = async (page: Page, options = { hasBalance: true }) => {
@@ -31,7 +31,7 @@ export const clearLocalStorage = async (page: Page) => {
 export const completeOnboardingSteps = async (page: Page, steps = 1) => {
   for (let i = 0; i < steps; i++) {
     await page.getByRole('button', { name: /Next|Continue|Complete/i }).click();
-    await page.waitForSelector('main');
+    await page.waitForSelector('main', { timeout: 3000 });
   }
 };
 
@@ -42,6 +42,6 @@ export const selectUserType = async (page: Page, userType: 'Investor' | 'Project
   // Then click the button to begin the journey
   await page.getByRole('button', { name: `Begin ${userType} Journey` }).click();
   
-  // Wait for main content to be visible
-  await page.waitForSelector('main');
+  // Wait for main content to be visible with reduced timeout
+  await page.waitForSelector('main', { timeout: 3000 });
 }; 
