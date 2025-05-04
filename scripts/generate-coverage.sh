@@ -1,14 +1,15 @@
 #!/bin/bash
 
-# Create test-results directory if it doesn't exist
-mkdir -p test-results
+# Generate unit test coverage
+npm run test:unit:coverage
 
-# Run tests and generate coverage report
-npm run test:e2e:coverage
+# Generate E2E test coverage
+npm run test:e2e:ci
 
-# Extract coverage percentage and save to file
-COVERAGE=$(cat coverage/lcov-report/index.html | grep -oP 'strong.*?(\d+\.\d+)%' | grep -oP '\d+\.\d+')
-echo $COVERAGE > test-results/coverage.txt
+# Combine coverage reports
+npx nyc report --reporter=html --reporter=text --reporter=lcov
 
-# Generate coverage badge
-curl -o test-results/coverage.svg "https://img.shields.io/badge/coverage-${COVERAGE}%25-brightgreen" 
+# Upload coverage to codecov if in CI
+if [ "$CI" = "true" ]; then
+  npx codecov
+fi 
