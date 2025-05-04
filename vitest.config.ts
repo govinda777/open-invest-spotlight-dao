@@ -7,7 +7,8 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
-    exclude: ['tests/**/*.spec.ts', 'tests/e2e/**', '**/node_modules/**'],
+    exclude: ['node_modules/**', 'dist/**'],
+    include: ['src/**/*.{test,spec}.{js,jsx,ts,tsx}'],
     setupFiles: ['./src/test/setup.ts'],
     threads: true,
     maxThreads: 4,
@@ -17,16 +18,14 @@ export default defineConfig({
     },
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'json', 'html'],
+      reporter: ['text', 'json', 'html', 'lcov'],
       exclude: [
-        'tests/**/*.spec.ts',
         'node_modules/**',
         'dist/**',
         '**/*.d.ts',
-        '**/*.test.ts',
-        '**/*.spec.ts',
         '**/*.config.ts',
         '**/*.config.js',
+        'src/test/**',
       ],
     },
     watch: false,

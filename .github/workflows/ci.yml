@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
 jobs:
   unit-tests:
     runs-on: ubuntu-latest
@@ -17,15 +22,6 @@ jobs:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
-    
-    - name: Debug Repository Info
-      run: |
-        echo "Repository: ${{ github.repository }}"
-        echo "Ref: ${{ github.ref }}"
-        echo "SHA: ${{ github.sha }}"
-        echo "Event Name: ${{ github.event_name }}"
-        echo "Workflow: ${{ github.workflow }}"
-        echo "Run ID: ${{ github.run_id }}"
     
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
@@ -43,27 +39,11 @@ jobs:
     
     - name: Install dependencies
       run: |
-        echo "Installing dependencies..."
-        for i in {1..3}; do
-          echo "Attempt $i: Installing dependencies..."
-          npm ci && break || {
-            echo "Attempt $i failed, waiting 10 seconds before retry..."
-            sleep 10
-          }
-        done
-        echo "Dependencies installed successfully"
+        rm -rf node_modules package-lock.json
+        npm install
     
-    - name: Run unit tests
-      run: |
-        echo "Starting unit tests..."
-        for i in {1..3}; do
-          echo "Attempt $i: Running unit tests..."
-          npm run test:unit:coverage && break || {
-            echo "Attempt $i failed, waiting 10 seconds before retry..."
-            sleep 10
-          }
-        done
-        echo "Unit tests completed"
+    - name: Run unit tests with coverage
+      run: npm run test:unit:coverage
     
     - name: Upload coverage report
       uses: actions/upload-artifact@v4
@@ -75,6 +55,7 @@ jobs:
       uses: coverallsapp/github-action@v2
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
+        path-to-lcov: ./coverage/lcov.info
 
   e2e-tests:
     runs-on: ubuntu-latest
@@ -88,15 +69,6 @@ jobs:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
-    
-    - name: Debug Environment
-      run: |
-        echo "Node Version: ${{ matrix.node-version }}"
-        echo "Browser: ${{ matrix.browser }}"
-        echo "Runner OS: ${{ runner.os }}"
-        echo "Runner Temp: ${{ runner.temp }}"
-        echo "Workflow: ${{ github.workflow }}"
-        echo "Run ID: ${{ github.run_id }}"
     
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
@@ -113,53 +85,17 @@ jobs:
           ${{ runner.os }}-playwright-
     
     - name: Install dependencies
-      run: |
-        echo "Installing project dependencies..."
-        for i in {1..3}; do
-          echo "Attempt $i: Installing dependencies..."
-          npm ci && break || {
-            echo "Attempt $i failed, waiting 10 seconds before retry..."
-            sleep 10
-          }
-        done
-        echo "Project dependencies installed"
+      run: npm ci
     
     - name: Install Playwright browsers
-      run: |
-        echo "Installing Playwright browser: ${{ matrix.browser }}"
-        for i in {1..3}; do
-          echo "Attempt $i: Installing Playwright browser..."
-          npx playwright install ${{ matrix.browser }} --with-deps && break || {
-            echo "Attempt $i failed, waiting 10 seconds before retry..."
-            sleep 10
-          }
-        done
-        echo "Playwright browser installed"
+      run: npx playwright install --with-deps
     
     - name: Run E2E tests
-      run: |
-        echo "Starting E2E tests for ${{ matrix.browser }}..."
-        for i in {1..3}; do
-          echo "Attempt $i: Running E2E tests..."
-          npm run test:e2e:ci -- --project=${{ matrix.browser }} && break || {
-            echo "Attempt $i failed, waiting 10 seconds before retry..."
-            sleep 10
-          }
-        done
-        echo "E2E tests completed"
+      run: npm run test:e2e:ci -- --project=${{ matrix.browser }}
     
     - name: Generate Allure Report
       if: always()
-      run: |
-        echo "Generating Allure report..."
-        for i in {1..3}; do
-          echo "Attempt $i: Generating Allure report..."
-          npm run test:e2e:allure:generate && break || {
-            echo "Attempt $i failed, waiting 10 seconds before retry..."
-            sleep 10
-          }
-        done
-        echo "Allure report generated"
+      run: npm run test:e2e:allure:generate
     
     - name: Upload test results
       uses: actions/upload-artifact@v4
@@ -175,34 +111,33 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./allure-report
+
+  deploy:
+    needs: [unit-tests, e2e-tests]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     
-    - name: Run Security Scan
-      uses: snyk/actions/node@master
-      env:
-        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-    
-    - name: Dependency Check
-      uses: dependency-check/Dependency-Check_Action@main
+    steps:
+    - uses: actions/checkout@v4
       with:
-        project: 'open-invest-spotlight-dao'
-        path: '.'
-        format: 'HTML'
+        fetch-depth: 0
     
-    - name: Run Compliance Check
-      uses: github/super-linter@v4
-      env:
-        VALIDATE_ALL_CODEBASE: true
-        DEFAULT_BRANCH: main
+    - name: Use Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
     
-    - name: Performance Test
+    - name: Install dependencies
       run: |
-        echo "Starting performance test..."
-        for i in {1..3}; do
-          echo "Attempt $i: Running performance test..."
-          npm install -g autocannon && break || {
-            echo "Attempt $i failed, waiting 10 seconds before retry..."
-            sleep 10
-          }
-        done
-        autocannon -c 10 -d 60 -r 1000 http://localhost:3000
-        echo "Performance test completed" 
+        rm -rf node_modules package-lock.json
+        npm install
+    
+    - name: Build
+      run: npm run build:gh-pages
+    
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./dist 

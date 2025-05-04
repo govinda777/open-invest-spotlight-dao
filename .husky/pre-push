@@ -11,4 +11,4 @@ echo "🏗️  Rodando build..."
 npm run build
 
 echo "🧪 Rodando testes E2E..."
-npm run test:e2e 
+npm run test:e2e -- --reporter=line
