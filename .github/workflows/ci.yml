@@ -53,17 +53,13 @@ jobs:
         done
         echo "Dependencies installed successfully"
     
-    - name: Run unit tests
+    - name: Run unit tests with coverage
+      run: npm run test:unit:coverage
+
+    - name: Check coverage file
       run: |
-        echo "Starting unit tests..."
-        for i in {1..3}; do
-          echo "Attempt $i: Running unit tests..."
-          npm run test:unit:coverage && break || {
-            echo "Attempt $i failed, waiting 10 seconds before retry..."
-            sleep 10
-          }
-        done
-        echo "Unit tests completed"
+        ls -lh ./coverage
+        cat ./coverage/lcov.info || echo "Arquivo lcov.info não encontrado"
     
     - name: Upload coverage report
       uses: actions/upload-artifact@v4
@@ -75,6 +71,7 @@ jobs:
       uses: coverallsapp/github-action@v2
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
+        path-to-lcov: ./coverage/lcov.info
 
   e2e-tests:
     runs-on: ubuntu-latest
