@@ -18,6 +18,7 @@
     "test:unit:fast": "vitest run --threads=4 --no-watch --exclude=tests/**/*.spec.ts",
     "test:unit:file": "vitest run --",
     "test:e2e": "playwright test",
+    "test:e2e:with-report": "playwright test && npm run report:serve:background",
     "test:e2e:fast": "playwright test --workers=4 --retries=0",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:debug": "playwright test --debug",
@@ -33,6 +34,7 @@
     "test:e2e:regression": "playwright test --project=regression",
     "test:e2e:smoke": "playwright test --project=smoke",
     "report:serve": "playwright show-report",
+    "report:serve:background": "nohup playwright show-report > /dev/null 2>&1 &",
     "report:build": "playwright show-report --output=playwright-report --quiet",
     "report:deploy": "gh-pages -d playwright-report"
   },

@@ -2,6 +2,7 @@ import { PlaywrightTestConfig, devices } from '@playwright/test';
 
 const config: PlaywrightTestConfig = {
   testDir: './tests',
+  testMatch: '**/*.spec.ts',
   timeout: 60 * 1000,
   expect: {
     timeout: 10000
@@ -26,6 +27,10 @@ const config: PlaywrightTestConfig = {
   },
   projects: [
     {
+      name: 'default',
+      use: { ...devices['Desktop Chrome'] },
+    },
+    {
       name: 'critical',
       testMatch: /.*\.critical\.spec\.ts/,
       use: { ...devices['Desktop Chrome'] },
@@ -48,10 +53,7 @@ const config: PlaywrightTestConfig = {
     timeout: 60 * 1000,
     stdout: 'pipe',
     stderr: 'pipe',
-    env: {
-      NODE_ENV: 'test'
-    }
-  },
+  }
 };
 
 export default config; 
