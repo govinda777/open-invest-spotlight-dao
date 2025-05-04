@@ -1,5 +1,7 @@
 # 🚀 Open Invest Spotlight DAO
 
+Test deployment to GitHub Pages.
+
 <div align="center">
     <img src="public/banner.svg" alt="Open Invest Spotlight DAO Banner" width="100%"/>
 </div>
@@ -80,6 +82,10 @@ cd spotlight-dao
 npm install --verbose --repository-url https://registry.npmjs.org/
 # Install and force the installation
 npm install --force
+```
+3. Pre-commit hooks
+```bash
+npx husky install --repository-url https://registry.npmjs.org/ --verbose
 ```
 
 ## 💻 Desenvolvimento
