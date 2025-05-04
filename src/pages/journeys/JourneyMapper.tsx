@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -25,7 +24,7 @@ import {
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Map, Route, Plus, Flow, Save } from 'lucide-react';
+import { ArrowLeft, Map, Route, Plus, Code, Save } from 'lucide-react';
 import { Journey, JourneyStep } from '@/journeys/map';
 import { JourneyGraph } from '@/components/journey/JourneyGraph';
 import { JourneyStepEditor } from '@/components/journey/JourneyStepEditor';
@@ -375,7 +374,7 @@ export const journeys: Journey[] = ${JSON.stringify(journeys, null, 2)};`;
                     Etapas
                   </TabsTrigger>
                   <TabsTrigger value="code">
-                    <Flow className="mr-2 h-4 w-4" />
+                    <Code className="mr-2 h-4 w-4" />
                     Código
                   </TabsTrigger>
                 </TabsList>
