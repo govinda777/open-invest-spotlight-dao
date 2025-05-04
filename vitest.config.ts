@@ -7,9 +7,8 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
-    exclude: ['tests/**/*.spec.ts'],
+    exclude: ['tests/**/*.spec.ts', 'tests/e2e/**', '**/node_modules/**'],
     setupFiles: ['./src/test/setup.ts'],
-    exclude: ['tests/e2e/**', '**/node_modules/**'],
     threads: true,
     maxThreads: 4,
     minThreads: 2,
