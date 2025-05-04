@@ -22,6 +22,14 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+    
     - name: Install dependencies
       run: npm ci
     
@@ -33,6 +41,11 @@ jobs:
       with:
         name: coverage-report
         path: coverage/
+    
+    - name: Update coverage badge
+      uses: coverallsapp/github-action@v2
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
 
   e2e-tests:
     runs-on: ubuntu-latest
@@ -40,6 +53,7 @@ jobs:
     strategy:
       matrix:
         node-version: [20.x]
+        browser: [chromium, firefox, webkit]
     
     steps:
     - uses: actions/checkout@v4
@@ -62,10 +76,10 @@ jobs:
       run: npm ci
     
     - name: Install Playwright browsers
-      run: npx playwright install --with-deps
+      run: npx playwright install ${{ matrix.browser }} --with-deps
     
     - name: Run E2E tests
-      run: npm run test:e2e:ci
+      run: npm run test:e2e:ci -- --project=${{ matrix.browser }}
     
     - name: Generate Allure Report
       if: always()
@@ -74,7 +88,7 @@ jobs:
     - name: Upload test results
       uses: actions/upload-artifact@v4
       with:
-        name: test-results
+        name: test-results-${{ matrix.browser }}
         path: |
           allure-results/
           playwright-report/
@@ -102,4 +116,9 @@ jobs:
       uses: github/super-linter@v4
       env:
         VALIDATE_ALL_CODEBASE: true
-        DEFAULT_BRANCH: main 
+        DEFAULT_BRANCH: main
+    
+    - name: Performance Test
+      run: |
+        npm install -g autocannon
+        autocannon -c 10 -d 60 -r 1000 http://localhost:3000 

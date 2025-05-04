@@ -11,16 +11,18 @@ This project implements a Continuous Integration and Continuous Deployment (CI/C
 ```mermaid
 graph TD
     A[Code Push/PR] --> B{Trigger}
-    B -->|Push to main| C[E2E Tests]
+    B -->|Push to main| C[Unit Tests]
     B -->|PR to main| C
     C --> D[Install Dependencies]
-    D --> E[Install Playwright]
-    E --> F[Run E2E Tests]
-    F --> G[Generate Reports]
-    G --> H[Upload Artifacts]
-    H --> I[Update Coverage Badge]
-    B -->|Push to main| J[Publish Allure Report]
-    J --> K[Deploy to GitHub Pages]
+    D --> E[Run Unit Tests]
+    E --> F[Upload Coverage]
+    F --> G[E2E Tests]
+    G --> H[Multi-Browser Testing]
+    H --> I[Generate Reports]
+    I --> J[Upload Artifacts]
+    J --> K[Security Scan]
+    K --> L[Performance Test]
+    L --> M[Deploy Reports]
 ```
 
 ### Trigger Conditions
@@ -30,20 +32,30 @@ graph TD
 
 ### Workflow Components
 
-1. **E2E Tests Workflow** (`e2e-tests.yml`)
+1. **Unit Tests Workflow** (`unit-tests`)
    - Runs on Ubuntu latest
    - Node.js version: 20
    - Key steps:
-     - Install dependencies
-     - Install Playwright browsers
-     - Execute E2E tests
-     - Generate and upload test reports
-     - Update test coverage badge in README
+     - Install dependencies with caching
+     - Execute unit tests with coverage
+     - Upload coverage reports
+     - Update coverage badge in README
 
-2. **Allure Report Publishing** (`allure-gh-pages.yml`)
-   - Publishes test reports to GitHub Pages
-   - Triggered on pushes to main branch
-   - Deploys Allure reports for easy access
+2. **E2E Tests Workflow** (`e2e-tests`)
+   - Runs on Ubuntu latest
+   - Multi-browser testing (Chromium, Firefox, WebKit)
+   - Key steps:
+     - Install dependencies with caching
+     - Install Playwright browsers
+     - Execute E2E tests across browsers
+     - Generate and upload test reports
+     - Deploy Allure reports to GitHub Pages
+
+3. **Security and Performance** (`security-performance`)
+   - Security scanning with Snyk
+   - Dependency vulnerability checking
+   - Compliance validation
+   - Performance testing with autocannon
 
 ## Quality Reports Access
 
@@ -55,10 +67,12 @@ graph LR
     B --> C[Allure Report]
     B --> D[Playwright Report]
     B --> E[Test Coverage]
-    C --> F[GitHub Pages]
-    D --> G[GitHub Artifacts]
-    E --> H[README Badge]
-    E --> I[Coverage Report]
+    B --> F[Performance Metrics]
+    C --> G[GitHub Pages]
+    D --> H[GitHub Artifacts]
+    E --> I[README Badge]
+    E --> J[Coverage Report]
+    F --> K[Performance Report]
 ```
 
 ### Test Reports
@@ -73,10 +87,18 @@ graph LR
    - Available as pipeline artifacts
    - Access through GitHub Actions workflow runs
    - Contains detailed test execution logs and screenshots
+   - Separate reports for each browser
 
 3. **Test Coverage**
    - Coverage badge automatically updated in README.md
    - Detailed coverage reports available in pipeline artifacts
+   - Historical coverage trends
+
+4. **Performance Reports**
+   - Load testing results with autocannon
+   - Response time metrics
+   - Throughput analysis
+   - Error rate monitoring
 
 ### Accessing Reports
 
@@ -88,7 +110,8 @@ graph TD
     D --> E[Allure Report]
     D --> F[Playwright Report]
     D --> G[Test Results]
-    C --> H[Interactive Allure Dashboard]
+    D --> H[Performance Data]
+    C --> I[Interactive Allure Dashboard]
 ```
 
 1. **GitHub Actions Interface**
@@ -98,6 +121,7 @@ graph TD
      - `allure-report`
      - `playwright-report`
      - `test-results`
+     - `performance-report`
 
 2. **GitHub Pages**
    - Allure reports are automatically published to GitHub Pages
@@ -110,16 +134,19 @@ graph TD
    - Ensure all tests pass locally
    - Run `npm run test:e2e` to verify E2E tests
    - Check test coverage locally
+   - Run performance tests locally
 
 2. **After Pipeline Execution**
    - Review Allure reports for test results
    - Check Playwright reports for any visual regressions
    - Monitor test coverage trends
+   - Analyze performance metrics
 
 3. **Troubleshooting**
    - If pipeline fails, check the specific job logs
    - Review test artifacts for detailed error information
    - Verify environment setup matches pipeline requirements
+   - Check performance thresholds
 
 ## Environment Requirements
 
@@ -127,6 +154,7 @@ graph TD
 - npm
 - Playwright browsers
 - GitHub Actions environment
+- autocannon (for performance testing)
 
 ## Maintenance
 
@@ -134,3 +162,4 @@ graph TD
 - Monitor test execution times
 - Review and update test coverage thresholds
 - Keep documentation up to date with pipeline changes
+- Monitor performance metrics and adjust thresholds
