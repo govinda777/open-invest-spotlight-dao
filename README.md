@@ -79,7 +79,8 @@ cd spotlight-dao
 2. Instale as dependências:
 ```bash
 # Install and show verbose output
-npm install --verbose --repository-url https://registry.npmjs.org/
+
+npm install --verbose --registry=https://registry.npmjs.org/
 # Install and force the installation
 npm install --force
 ```
