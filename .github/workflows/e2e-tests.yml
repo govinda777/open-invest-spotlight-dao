@@ -11,6 +11,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Debug Workflow Context
+      run: |
+        echo "Workflow Name: ${{ github.workflow }}"
+        echo "Run ID: ${{ github.run_id }}"
+        echo "Run Number: ${{ github.run_number }}"
+        echo "Actor: ${{ github.actor }}"
+        echo "Event Path: ${{ github.event_path }}"
     
     - name: Setup Node.js
       uses: actions/setup-node@v4
@@ -30,17 +40,29 @@ jobs:
     
     - name: Install Dependencies
       run: |
+        echo "Starting dependency installation..."
         npm ci
+        echo "Installing Playwright browsers..."
         npx playwright install --with-deps || true
+        echo "Dependencies installed successfully"
     
     - name: Run E2E Tests
-      run: npm run test:e2e
+      run: |
+        echo "Starting E2E test execution..."
+        npm run test:e2e
+        echo "E2E tests completed"
     
     - name: Install Allure Command Line
-      run: npm install -g allure-commandline
+      run: |
+        echo "Installing Allure CLI..."
+        npm install -g allure-commandline
+        echo "Allure CLI installed"
     
     - name: Generate Allure Report
-      run: npm run test:e2e:allure:generate
+      run: |
+        echo "Generating Allure report..."
+        npm run test:e2e:allure:generate
+        echo "Allure report generated"
     
     - name: Upload Allure Report
       uses: actions/upload-artifact@v4
@@ -62,10 +84,12 @@ jobs:
 
     - name: Generate Test Coverage Badge
       run: |
+        echo "Generating test coverage badge..."
         echo "coverage=$(cat test-results/coverage.txt)" >> $GITHUB_OUTPUT
+        echo "Coverage badge generated"
       id: coverage
 
-    - name: Update README with Test Coverage
+    - name: Update README with Coverage
       uses: EndBug/add-and-commit@v9
       with:
         author_name: 'GitHub Action'

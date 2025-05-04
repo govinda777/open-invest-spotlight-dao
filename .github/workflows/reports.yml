@@ -10,6 +10,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Debug Workflow Context
+        run: |
+          echo "Workflow Name: ${{ github.workflow }}"
+          echo "Run ID: ${{ github.run_id }}"
+          echo "Run Number: ${{ github.run_number }}"
+          echo "Actor: ${{ github.actor }}"
+          echo "Event Path: ${{ github.event_path }}"
+          echo "Triggered by: ${{ github.event_name }}"
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -17,14 +28,28 @@ jobs:
           node-version: '20'
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          echo "Starting dependency installation..."
+          npm ci
+          echo "Dependencies installed successfully"
 
       - name: Run tests and generate reports
         run: |
+          echo "Starting test execution..."
           npm run test
+          echo "Tests completed"
+          
+          echo "Generating Playwright report..."
           npx playwright show-report
+          echo "Playwright report generated"
+          
+          echo "Generating Allure report..."
           npx allure generate allure-results --clean
+          echo "Allure report generated"
+          
+          echo "Opening Allure report..."
           npx allure open allure-report
+          echo "Allure report opened"
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
