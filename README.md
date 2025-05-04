@@ -86,7 +86,11 @@ npm install --force
 3. Pre-commit hooks
 ```bash
 npx husky install --repository-url https://registry.npmjs.org/ --verbose
+
+npm install --save-dev @vitest/coverage-v8@^1.3.1 --repository https://registry.npmjs.org/ --verbose
 ```
+
+npm install --save-dev @vitest/coverage-v8@^1.3.1 --verbose
 
 ## 💻 Desenvolvimento
 
