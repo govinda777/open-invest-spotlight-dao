@@ -46,6 +46,11 @@ const config: PlaywrightTestConfig = {
     port: 8080,
     reuseExistingServer: !process.env.CI,
     timeout: 60 * 1000,
+    stdout: 'pipe',
+    stderr: 'pipe',
+    env: {
+      NODE_ENV: 'test'
+    }
   },
 };
 
