@@ -102,6 +102,9 @@ npm run test:e2e
 # Testes com relatório
 chmod +x run-e2e-with-report.sh
 ./run-e2e-with-report.sh
+
+# Testes com UI
+npx playwright test --ui
 ```
 
 ## 📚 Documentação
@@ -191,3 +194,5 @@ npm run test:e2e:allure:generate
 # Abrir relatório no navegador
 npm run test:e2e:allure:open
 ```
+
+npm install --repository-url https://registry.npmjs.org/
