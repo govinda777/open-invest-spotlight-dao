@@ -1,5 +1,11 @@
 import { Page } from '@playwright/test';
 
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
+}
+
 export const waitForAppLoad = async (page: Page) => {
   // Wait for the main content to be visible with reduced timeout
   await page.waitForSelector('main', { timeout: 2000, state: 'visible' });
@@ -44,4 +50,4 @@ export const selectUserType = async (page: Page, userType: 'Investor' | 'Project
   
   // Wait for main content to be visible with reduced timeout
   await page.waitForSelector('main', { timeout: 2000, state: 'visible' });
-}; 
+};

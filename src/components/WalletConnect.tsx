@@ -1,57 +1,48 @@
-import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
 
-interface WalletConnectProps {
-  className?: string;
+import React, { useState } from 'react';
+import { Button } from './ui/button';
+
+// Adding a proper type definition for window.ethereum
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
 }
 
-const WalletConnect: React.FC<WalletConnectProps> = ({ className }) => {
-  const [isConnected, setIsConnected] = useState(false);
-  const [address, setAddress] = useState<string | null>(null);
-
-  useEffect(() => {
-    // Check if wallet is already connected
-    if (window.ethereum?.selectedAddress) {
-      setIsConnected(true);
-      setAddress(window.ethereum.selectedAddress);
-    }
-  }, []);
+export const WalletConnect: React.FC = () => {
+  const [account, setAccount] = useState<string | null>(null);
+  const [isConnecting, setIsConnecting] = useState(false);
 
   const connectWallet = async () => {
-    if (window.ethereum) {
-      try {
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        setIsConnected(true);
-        setAddress(accounts[0]);
-      } catch (error) {
-        console.error('Failed to connect wallet:', error);
-      }
-    } else {
-      console.error('No Ethereum provider found');
+    if (!window.ethereum) {
+      alert('Please install MetaMask to use this feature');
+      return;
     }
-  };
 
-  const disconnectWallet = () => {
-    setIsConnected(false);
-    setAddress(null);
+    try {
+      setIsConnecting(true);
+      const accounts = await window.ethereum.request({
+        method: 'eth_requestAccounts',
+      });
+      setAccount(accounts[0]);
+    } catch (error) {
+      console.error('Error connecting wallet:', error);
+    } finally {
+      setIsConnecting(false);
+    }
   };
 
   return (
-    <div className={className}>
-      {isConnected ? (
-        <>
-          <span className="text-dao-purple mr-2">Connected</span>
-          <Button variant="outline" className="border-dao-purple text-dao-purple" onClick={disconnectWallet}>
-            Disconnect
-          </Button>
-        </>
+    <div>
+      {!account ? (
+        <Button onClick={connectWallet} disabled={isConnecting} className="animate-pulse">
+          {isConnecting ? 'Connecting...' : 'Connect Wallet'}
+        </Button>
       ) : (
-        <Button variant="outline" className="border-dao-purple text-dao-purple" onClick={connectWallet}>
-          Connect Wallet
+        <Button variant="outline" className="font-mono">
+          {account.substring(0, 6)}...{account.substring(account.length - 4)}
         </Button>
       )}
     </div>
   );
 };
-
-export default WalletConnect; 
