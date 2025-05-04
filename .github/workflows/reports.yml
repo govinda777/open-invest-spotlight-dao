@@ -21,6 +21,9 @@ jobs:
           echo "Actor: ${{ github.actor }}"
           echo "Event Path: ${{ github.event_path }}"
           echo "Triggered by: ${{ github.event_name }}"
+          echo "Repository: ${{ github.repository }}"
+          echo "Ref: ${{ github.ref }}"
+          echo "SHA: ${{ github.sha }}"
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -30,25 +33,55 @@ jobs:
       - name: Install dependencies
         run: |
           echo "Starting dependency installation..."
-          npm ci
+          for i in {1..3}; do
+            echo "Attempt $i: Installing dependencies..."
+            npm ci && break || {
+              echo "Attempt $i failed, waiting 10 seconds before retry..."
+              sleep 10
+            }
+          done
           echo "Dependencies installed successfully"
 
       - name: Run tests and generate reports
         run: |
           echo "Starting test execution..."
-          npm run test
+          for i in {1..3}; do
+            echo "Attempt $i: Running tests..."
+            npm run test && break || {
+              echo "Attempt $i failed, waiting 10 seconds before retry..."
+              sleep 10
+            }
+          done
           echo "Tests completed"
           
           echo "Generating Playwright report..."
-          npx playwright show-report
+          for i in {1..3}; do
+            echo "Attempt $i: Generating Playwright report..."
+            npx playwright show-report && break || {
+              echo "Attempt $i failed, waiting 10 seconds before retry..."
+              sleep 10
+            }
+          done
           echo "Playwright report generated"
           
           echo "Generating Allure report..."
-          npx allure generate allure-results --clean
+          for i in {1..3}; do
+            echo "Attempt $i: Generating Allure report..."
+            npx allure generate allure-results --clean && break || {
+              echo "Attempt $i failed, waiting 10 seconds before retry..."
+              sleep 10
+            }
+          done
           echo "Allure report generated"
           
           echo "Opening Allure report..."
-          npx allure open allure-report
+          for i in {1..3}; do
+            echo "Attempt $i: Opening Allure report..."
+            npx allure open allure-report && break || {
+              echo "Attempt $i failed, waiting 10 seconds before retry..."
+              sleep 10
+            }
+          done
           echo "Allure report opened"
 
       - name: Deploy to GitHub Pages
