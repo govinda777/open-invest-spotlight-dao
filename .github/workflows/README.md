@@ -6,9 +6,46 @@ This document provides an overview of the Continuous Integration and Continuous 
 
 The project implements a robust CI/CD pipeline using GitHub Actions, focusing on end-to-end testing, test reporting, and automated deployments. The workflows are designed to ensure code quality and provide comprehensive test coverage reporting.
 
+## Pipeline Architecture
+
+```mermaid
+graph TD
+    A[Push/PR to main] --> B[E2E Tests]
+    A --> C[Reports Generation]
+    B --> D[Test Execution]
+    D --> E[Report Generation]
+    E --> F[Artifact Upload]
+    C --> G[Documentation]
+    C --> H[Playwright Reports]
+    C --> I[Allure Reports]
+    F --> J[GitHub Pages Deployment]
+    G --> J
+    H --> J
+    I --> J
+```
+
 ## Workflows
 
 ### 1. E2E Tests (`e2e-tests.yml`)
+
+```mermaid
+sequenceDiagram
+    participant G as GitHub
+    participant W as Workflow
+    participant T as Test Runner
+    participant R as Report Generator
+    participant A as Artifact Storage
+    
+    G->>W: Trigger on push/PR
+    W->>T: Setup Node.js 20
+    T->>T: Install dependencies
+    T->>T: Install Playwright
+    T->>T: Run E2E tests
+    T->>R: Generate reports
+    R->>A: Upload artifacts
+    R->>A: Update coverage badge
+    A->>G: Deploy to Pages
+```
 
 **Purpose**: Runs end-to-end tests and generates test reports.
 
@@ -28,6 +65,18 @@ The project implements a robust CI/CD pipeline using GitHub Actions, focusing on
 
 ### 2. Reports Generation (`reports.yml`)
 
+```mermaid
+graph LR
+    A[Trigger] --> B[Setup]
+    B --> C[Generate Reports]
+    C --> D[Playwright Reports]
+    C --> E[Allure Reports]
+    C --> F[Documentation]
+    D --> G[Deploy]
+    E --> G
+    F --> G
+```
+
 **Purpose**: Generates and deploys test reports to GitHub Pages.
 
 **Triggers**:
@@ -46,6 +95,14 @@ The project implements a robust CI/CD pipeline using GitHub Actions, focusing on
 
 ### 3. Playwright Report Deployment (`playwright-gh-pages.yml`)
 
+```mermaid
+flowchart TD
+    A[Trigger] --> B[Run Tests]
+    B --> C[Build Report]
+    C --> D[Deploy to Pages]
+    D --> E[Verify Deployment]
+```
+
 **Purpose**: Specifically handles the deployment of Playwright test reports.
 
 **Triggers**:
@@ -57,6 +114,21 @@ The project implements a robust CI/CD pipeline using GitHub Actions, focusing on
 - Deploys report to GitHub Pages
 
 ### 4. Allure Report Publishing (`allure-report.yml` and `allure-gh-pages.yml`)
+
+```mermaid
+sequenceDiagram
+    participant G as GitHub
+    participant W as Workflow
+    participant T as Test Runner
+    participant R as Allure
+    participant P as Pages
+    
+    G->>W: Trigger
+    W->>T: Run E2E Tests
+    T->>R: Generate Report
+    R->>P: Deploy Report
+    P->>G: Update Pages
+```
 
 **Purpose**: Handles the generation and deployment of Allure test reports.
 
@@ -71,6 +143,19 @@ The project implements a robust CI/CD pipeline using GitHub Actions, focusing on
 
 ## Artifacts and Reports
 
+```mermaid
+graph TD
+    A[Test Execution] --> B[Artifacts]
+    B --> C[Allure Reports]
+    B --> D[Playwright Reports]
+    B --> E[Test Results]
+    B --> F[Coverage Data]
+    C --> G[GitHub Pages]
+    D --> G
+    E --> G
+    F --> G
+```
+
 The workflows generate and store several types of artifacts:
 
 1. **Allure Reports**: Comprehensive test reports with detailed test execution information
@@ -79,6 +164,17 @@ The workflows generate and store several types of artifacts:
 4. **Test Coverage**: Code coverage metrics and badges
 
 ## GitHub Pages Deployment
+
+```mermaid
+graph LR
+    A[Reports] --> B[GitHub Pages]
+    B --> C[Playwright Reports]
+    B --> D[Allure Reports]
+    B --> E[Documentation]
+    C --> F[Public URL]
+    D --> F
+    E --> F
+```
 
 All reports are automatically deployed to GitHub Pages:
 - Playwright reports: `https://[username].github.io/[repo]/playwright`
