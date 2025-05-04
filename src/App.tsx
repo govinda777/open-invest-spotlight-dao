@@ -12,6 +12,7 @@ import InvestorJourney from './pages/journeys/InvestorJourney';
 import ProjectOwnerJourney from './pages/journeys/ProjectOwnerJourney';
 import DAOMemberJourney from './pages/journeys/DAOMemberJourney';
 import CommunityMemberJourney from './pages/journeys/CommunityMemberJourney';
+import JourneyMapper from './pages/journeys/JourneyMapper';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           <Route path="/journeys/project-owner" element={<ProjectOwnerJourney />} />
           <Route path="/journeys/dao-member" element={<DAOMemberJourney />} />
           <Route path="/journeys/community-member" element={<CommunityMemberJourney />} />
+          <Route path="/journeys/mapper" element={<JourneyMapper />} />
         </Routes>
         <Footer />
       </div>

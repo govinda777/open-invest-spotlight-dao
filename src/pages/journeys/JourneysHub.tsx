@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { ChevronRight, Users, Briefcase, Vote, MessageSquare } from 'lucide-react';
+import { ChevronRight, Users, Briefcase, Vote, MessageSquare, Map, Route } from 'lucide-react';
 import { JourneyManager, UserType } from '@/utils/userJourneys';
 
 const JourneysHub = () => {
@@ -43,11 +43,20 @@ const JourneysHub = () => {
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="space-y-8">
-        <div className="space-y-2">
-          <h1 className="text-3xl font-bold">User Journeys</h1>
-          <p className="text-lg text-muted-foreground">
-            Explore different paths and experiences within the Open Invest Spotlight DAO platform.
-          </p>
+        <div className="flex justify-between items-center">
+          <div className="space-y-2">
+            <h1 className="text-3xl font-bold">User Journeys</h1>
+            <p className="text-lg text-muted-foreground">
+              Explore different paths and experiences within the Open Invest Spotlight DAO platform.
+            </p>
+          </div>
+          
+          <Button className="bg-gradient-to-r from-primary to-purple-700" asChild>
+            <Link to="/journeys/mapper">
+              <Map className="mr-2 h-4 w-4" />
+              Journey Mapper
+            </Link>
+          </Button>
         </div>
         
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -86,6 +95,34 @@ const JourneysHub = () => {
             );
           })}
         </div>
+        
+        <Card className="bg-primary-foreground border-primary-foreground">
+          <CardHeader>
+            <div className="flex items-center gap-3 mb-1">
+              <Route className="h-5 w-5 text-primary" />
+              <CardTitle>Journey Management</CardTitle>
+            </div>
+            <CardDescription>
+              Use our journey mapping tool to create and customize user journeys.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="prose max-w-none dark:prose-invert">
+              <p>
+                With the Journey Mapper, you can visualize, create, and edit user journeys
+                for your platform. Define steps, connections between them, and even paywall
+                positions to optimize the user experience.
+              </p>
+            </div>
+          </CardContent>
+          <CardFooter>
+            <Button variant="outline" className="ml-auto" asChild>
+              <Link to="/journeys/mapper">
+                Open Journey Mapper <ChevronRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </CardFooter>
+        </Card>
         
         <Card className="bg-primary-foreground border-primary-foreground">
           <CardHeader>

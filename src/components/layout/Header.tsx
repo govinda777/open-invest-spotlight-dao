@@ -1,44 +1,40 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import WalletConnect from '@/components/WalletConnect';
-import logo from '@/assets/svg/logo.svg';
+import { WalletConnect } from '@/components/WalletConnect';
 
-const Header = () => {
+export function Header() {
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-sm border-b border-slate-200">
-      <div className="max-w-7xl mx-auto px-6 py-4">
-        <div className="flex items-center justify-between">
+    <header className="border-b">
+      <div className="container flex h-16 items-center justify-between px-4">
+        <div className="flex gap-6 md:gap-10">
           <Link to="/" className="flex items-center space-x-2">
-            <img src={logo} alt="Open Invest Spotlight DAO" className="h-8 w-8" />
-            <span className="text-xl font-bold text-slate-900">Open Invest</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+              />
+            </svg>
+            <span className="font-bold">Open Invest DAO</span>
           </Link>
-          
-          <nav className="hidden md:flex items-center space-x-8">
-            <Link to="/about" className="text-slate-600 hover:text-dao-purple transition-colors">
-              About
-            </Link>
-            <Link to="/investments" className="text-slate-600 hover:text-dao-purple transition-colors">
-              Investments
-            </Link>
-            <Link to="/governance" className="text-slate-600 hover:text-dao-purple transition-colors">
-              Governance
-            </Link>
-            <Link to="/resources" className="text-slate-600 hover:text-dao-purple transition-colors">
-              Resources
-            </Link>
+          <nav className="hidden md:flex gap-6">
+            <Link to="/" className="hover:text-primary">Home</Link>
+            <Link to="/journeys" className="hover:text-primary">Journeys</Link>
+            <Link to="/onboarding" className="hover:text-primary">Onboarding</Link>
           </nav>
-          
-          <div className="flex items-center space-x-4">
-            <WalletConnect />
-            <Button className="bg-dao-purple hover:bg-dao-darkPurple">
-              Join DAO
-            </Button>
-          </div>
+        </div>
+        <div className="flex gap-4 items-center">
+          <WalletConnect />
         </div>
       </div>
     </header>
   );
-};
-
-export default Header;
+}

@@ -1,6 +1,6 @@
+
 import { ethers } from 'ethers';
 import { spawn } from 'child_process';
-import { JsonRpcProvider } from '@ethersproject/providers';
 
 let hardhatProcess: any;
 
@@ -41,5 +41,6 @@ export async function getTestAccounts() {
 export async function getTestWallet(index = 0) {
   const provider = new ethers.JsonRpcProvider('http://localhost:8545');
   const accounts = await provider.listAccounts();
-  return new ethers.Wallet(provider, accounts[index]);
+  // Corrigido: criar wallet com provider e endereço
+  return new ethers.Wallet(accounts[index].address).connect(provider);
 }
