@@ -1,77 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="1200" height="400" viewBox="0 0 1200 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <!-- Enhanced gradients -->
-    <defs>
-        <linearGradient id="bgGradient" x1="0" y1="0" x2="1200" y2="400" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stop-color="#0f172a"/>
-            <stop offset="50%" stop-color="#1e293b"/>
-            <stop offset="100%" stop-color="#0f172a"/>
-        </linearGradient>
-        <linearGradient id="spotlightGradient" x1="0" y1="0" x2="1" y2="1" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stop-color="#FFD700"/>
-            <stop offset="50%" stop-color="#FFA500"/>
-            <stop offset="100%" stop-color="#FFD700"/>
-        </linearGradient>
-        <linearGradient id="glowGradient" x1="0" y1="0" x2="1" y2="1" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stop-color="#FFD700" stop-opacity="0.8"/>
-            <stop offset="100%" stop-color="#FFA500" stop-opacity="0"/>
-        </linearGradient>
-        <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="5" result="blur"/>
-            <feComposite in="SourceGraphic" in2="blur" operator="over"/>
-        </filter>
-    </defs>
-
-    <!-- Background with enhanced gradient -->
-    <rect width="1200" height="400" fill="url(#bgGradient)"/>
-
-    <!-- Dynamic background elements -->
-    <circle cx="200" cy="200" r="150" fill="url(#spotlightGradient)" opacity="0.15" filter="url(#glow)"/>
-    <circle cx="1000" cy="200" r="150" fill="url(#spotlightGradient)" opacity="0.15" filter="url(#glow)"/>
-    
-    <!-- Enhanced spotlight effect -->
-    <path d="M600 50 L800 200 L600 350 L400 200 Z" fill="url(#spotlightGradient)" opacity="0.25" filter="url(#glow)"/>
-    
-    <!-- Modern grid pattern -->
-    <g opacity="0.1">
-        <path d="M0 0 L1200 0 L1200 400 L0 400 Z" stroke="white" stroke-width="1"/>
-        <path d="M0 100 L1200 100" stroke="white" stroke-width="1"/>
-        <path d="M0 200 L1200 200" stroke="white" stroke-width="1"/>
-        <path d="M0 300 L1200 300" stroke="white" stroke-width="1"/>
-        <path d="M300 0 L300 400" stroke="white" stroke-width="1"/>
-        <path d="M600 0 L600 400" stroke="white" stroke-width="1"/>
-        <path d="M900 0 L900 400" stroke="white" stroke-width="1"/>
-    </g>
-
-    <!-- Enhanced text with glow effect -->
-    <text x="600" y="180" font-family="Arial, sans-serif" font-size="52" font-weight="bold" fill="white" text-anchor="middle" filter="url(#glow)">
-        Open Invest
-    </text>
-    <text x="600" y="240" font-family="Arial, sans-serif" font-size="42" fill="url(#spotlightGradient)" text-anchor="middle" filter="url(#glow)">
-        Spotlight DAO
-    </text>
-
-    <!-- Decorative elements -->
-    <g opacity="0.6">
-        <circle cx="100" cy="100" r="20" fill="none" stroke="url(#spotlightGradient)" stroke-width="2"/>
-        <circle cx="1100" cy="300" r="20" fill="none" stroke="url(#spotlightGradient)" stroke-width="2"/>
-        <circle cx="150" cy="350" r="15" fill="none" stroke="url(#spotlightGradient)" stroke-width="2"/>
-        <circle cx="1050" cy="50" r="15" fill="none" stroke="url(#spotlightGradient)" stroke-width="2"/>
-    </g>
-
-    <!-- Dynamic lines -->
-    <g opacity="0.7">
-        <line x1="400" y1="280" x2="800" y2="280" stroke="url(#spotlightGradient)" stroke-width="2"/>
-        <line x1="400" y1="290" x2="800" y2="290" stroke="url(#spotlightGradient)" stroke-width="2"/>
-    </g>
-
-    <!-- Floating particles -->
-    <g opacity="0.4">
-        <circle cx="250" cy="150" r="3" fill="url(#spotlightGradient)"/>
-        <circle cx="950" cy="250" r="3" fill="url(#spotlightGradient)"/>
-        <circle cx="350" cy="300" r="2" fill="url(#spotlightGradient)"/>
-        <circle cx="850" cy="100" r="2" fill="url(#spotlightGradient)"/>
-        <circle cx="450" cy="200" r="2" fill="url(#spotlightGradient)"/>
-        <circle cx="750" cy="150" r="3" fill="url(#spotlightGradient)"/>
-    </g>
-</svg> 
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#4A00E0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8E2DE2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <circle cx="100" cy="100" r="80" fill="url(#grad1)" />
+  <text x="100" y="115" font-size="40" text-anchor="middle" fill="#FFFFFF" font-family="Arial">Open Invest DAO</text>
+</svg>
