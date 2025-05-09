@@ -16,7 +16,7 @@ import { PaywallToggle } from './step-editor/PaywallToggle';
 import { stepSchema, StepFormValues } from './step-editor/schema';
 
 interface JourneyStepEditorProps {
-  journey: Journey;
+  journey: Journey | null;
   step: JourneyStep | null;
   onSave: (values: StepFormValues) => void;
   onDelete?: () => void;

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { FormDescription, FormField, FormLabel } from "@/components/ui/form";
+import { FormDescription, FormLabel } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Trash } from 'lucide-react';
 import { 
@@ -15,7 +15,7 @@ import { useFormContext } from "react-hook-form";
 import { Journey } from '@/journeys/map';
 
 interface NextStepsFieldProps {
-  journey: Journey;
+  journey: Journey | null;
   currentStepId?: string;
 }
 
@@ -23,13 +23,13 @@ export const NextStepsField: React.FC<NextStepsFieldProps> = ({ journey, current
   const { watch, setValue } = useFormContext();
   
   // Get available steps (excluding the current step)
-  const availableSteps = journey.steps
-    .filter(s => !currentStepId || s.id !== currentStepId)
-    .map(s => s.id);
+  const availableSteps = journey?.steps
+    ?.filter(s => !currentStepId || s.id !== currentStepId)
+    .map(s => s.id) || [];
 
   // Add a step to nextSteps
   const addNextStep = (stepId: string) => {
-    const currentNextSteps = watch("nextSteps");
+    const currentNextSteps = watch("nextSteps") || [];
     if (!currentNextSteps.includes(stepId)) {
       setValue("nextSteps", [...currentNextSteps, stepId]);
     }
@@ -37,7 +37,7 @@ export const NextStepsField: React.FC<NextStepsFieldProps> = ({ journey, current
 
   // Remove a step from nextSteps
   const removeNextStep = (stepId: string) => {
-    const currentNextSteps = watch("nextSteps");
+    const currentNextSteps = watch("nextSteps") || [];
     setValue("nextSteps", currentNextSteps.filter(id => id !== stepId));
   };
 
@@ -67,7 +67,7 @@ export const NextStepsField: React.FC<NextStepsFieldProps> = ({ journey, current
             </Select>
             
             <div className="space-y-2">
-              {watch("nextSteps").map(stepId => (
+              {(watch("nextSteps") || []).map(stepId => (
                 <div 
                   key={stepId} 
                   className="flex items-center justify-between p-2 bg-accent rounded-md"
@@ -84,7 +84,7 @@ export const NextStepsField: React.FC<NextStepsFieldProps> = ({ journey, current
                 </div>
               ))}
               
-              {watch("nextSteps").length === 0 && (
+              {(watch("nextSteps") || []).length === 0 && (
                 <p className="text-sm text-muted-foreground italic">
                   Esta será uma etapa final da jornada.
                 </p>
