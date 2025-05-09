@@ -14,16 +14,7 @@ import { JourneyStepsList } from '@/components/journey/JourneyStepsList';
 import { JourneyCodeView } from '@/components/journey/JourneyCodeView';
 import { CreateJourneyDialog } from '@/components/journey/CreateJourneyDialog';
 import { JourneyStepEditor } from '@/components/journey/JourneyStepEditor';
-import * as z from "zod";
-
-// Schema for step validation
-const stepSchema = z.object({
-  id: z.string().min(2, "ID deve ter pelo menos 2 caracteres"),
-  title: z.string().min(2, "Título deve ter pelo menos 2 caracteres"),
-  description: z.string().min(5, "Descrição deve ter pelo menos 5 caracteres"),
-  nextSteps: z.array(z.string()),
-  paywall: z.boolean().optional(),
-});
+import { StepFormValues } from '@/components/journey/step-editor/schema';
 
 const JourneyMapper = () => {
   const navigate = useNavigate();
@@ -49,7 +40,7 @@ const JourneyMapper = () => {
   };
 
   // Add new journey
-  const handleAddJourney = (values: z.infer<typeof stepSchema>) => {
+  const handleAddJourney = (values: StepFormValues) => {
     const newJourney: Journey = {
       id: values.id,
       label: values.title,
@@ -67,7 +58,7 @@ const JourneyMapper = () => {
   };
   
   // Add step handler
-  const handleAddStep = (values: z.infer<typeof stepSchema>) => {
+  const handleAddStep = (values: StepFormValues) => {
     if (!selectedJourney) return;
     
     const newStep: JourneyStep = {
@@ -97,7 +88,7 @@ const JourneyMapper = () => {
   };
   
   // Update step handler
-  const handleUpdateStep = (values: z.infer<typeof stepSchema>) => {
+  const handleUpdateStep = (values: StepFormValues) => {
     if (!selectedJourney || !selectedStep) return;
     
     const updatedStep: JourneyStep = {
