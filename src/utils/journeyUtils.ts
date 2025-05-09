@@ -1,11 +1,10 @@
 
-import { Journey, JourneyStep } from '@/journeys/map';
+import { Journey, JourneyStep, journeys as existingJourneys } from '@/journeys/map';
 import { useToast } from "@/hooks/use-toast";
 
 // Load journeys from the map module
 export const loadJourneys = (): Journey[] => {
-  // Import journeys from the map module and create a deep copy
-  const existingJourneys = require('@/journeys/map').journeys;
+  // Create a deep copy of the journeys to prevent modifying the original
   return JSON.parse(JSON.stringify(existingJourneys));
 };
 
