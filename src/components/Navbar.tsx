@@ -1,11 +1,12 @@
 
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Button } from "./ui/button";
 
 export const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,6 +27,20 @@ export const Navbar = () => {
     setMenuOpen(!menuOpen);
   };
 
+  const scrollToSection = (sectionId: string) => {
+    if (location.pathname !== '/') {
+      // If not on home page, navigate to home first
+      window.location.href = `/#${sectionId}`;
+      return;
+    }
+    
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+    setMenuOpen(false);
+  };
+
   return (
     <>
       <nav className={`fixed w-full z-50 transition-all duration-300 ${
@@ -40,21 +55,33 @@ export const Navbar = () => {
           </div>
           
           <div className="hidden md:flex items-center gap-6">
-            <Link to="/#about" className="text-foreground/80 hover:text-primary transition-colors">
+            <button 
+              onClick={() => scrollToSection('about')}
+              className="text-foreground/80 hover:text-primary transition-colors cursor-pointer"
+            >
               About
-            </Link>
-            <Link to="/#features" className="text-foreground/80 hover:text-primary transition-colors">
+            </button>
+            <button 
+              onClick={() => scrollToSection('features')}
+              className="text-foreground/80 hover:text-primary transition-colors cursor-pointer"
+            >
               Features
-            </Link>
+            </button>
             <Link to="/journeys" className="text-foreground/80 hover:text-primary transition-colors">
               Journeys
             </Link>
-            <Link to="/#projects" className="text-foreground/80 hover:text-primary transition-colors">
+            <button 
+              onClick={() => scrollToSection('projects')}
+              className="text-foreground/80 hover:text-primary transition-colors cursor-pointer"
+            >
               Projects
-            </Link>
-            <Link to="/#dao" className="text-foreground/80 hover:text-primary transition-colors">
+            </button>
+            <button 
+              onClick={() => scrollToSection('join')}
+              className="text-foreground/80 hover:text-primary transition-colors cursor-pointer"
+            >
               DAO
-            </Link>
+            </button>
           </div>
           
           <div className="flex items-center gap-4">
@@ -80,20 +107,18 @@ export const Navbar = () => {
         <div className="fixed inset-0 z-40 bg-white pt-16 animate-fade-in md:hidden">
           <div className="container mx-auto px-4 py-8">
             <div className="space-y-6">
-              <Link 
-                to="/#about" 
-                className="block text-lg font-medium px-4 py-2 hover:bg-slate-100 rounded-md"
-                onClick={toggleMenu}
+              <button 
+                onClick={() => scrollToSection('about')}
+                className="block text-lg font-medium px-4 py-2 hover:bg-slate-100 rounded-md w-full text-left"
               >
                 About
-              </Link>
-              <Link 
-                to="/#features" 
-                className="block text-lg font-medium px-4 py-2 hover:bg-slate-100 rounded-md"
-                onClick={toggleMenu}
+              </button>
+              <button 
+                onClick={() => scrollToSection('features')}
+                className="block text-lg font-medium px-4 py-2 hover:bg-slate-100 rounded-md w-full text-left"
               >
                 Features
-              </Link>
+              </button>
               <Link 
                 to="/journeys" 
                 className="block text-lg font-medium px-4 py-2 hover:bg-slate-100 rounded-md"
@@ -101,13 +126,12 @@ export const Navbar = () => {
               >
                 Journeys
               </Link>
-              <Link 
-                to="/#projects" 
-                className="block text-lg font-medium px-4 py-2 hover:bg-slate-100 rounded-md"
-                onClick={toggleMenu}
+              <button 
+                onClick={() => scrollToSection('projects')}
+                className="block text-lg font-medium px-4 py-2 hover:bg-slate-100 rounded-md w-full text-left"
               >
                 Projects
-              </Link>
+              </button>
               <Link 
                 to="/onboarding" 
                 className="block text-lg font-medium px-4 py-2 hover:bg-slate-100 rounded-md"

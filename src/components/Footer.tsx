@@ -2,6 +2,13 @@
 import { Link } from "react-router-dom";
 
 export const Footer = () => {
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <footer className="bg-slate-900 text-white py-12">
       <div className="container mx-auto px-4">
@@ -18,9 +25,12 @@ export const Footer = () => {
             <h4 className="font-medium mb-4">Quick Links</h4>
             <ul className="space-y-2 text-sm text-slate-300">
               <li>
-                <Link to="/" className="hover:text-primary transition-colors">
+                <button 
+                  onClick={() => scrollToSection('about')}
+                  className="hover:text-primary transition-colors text-left"
+                >
                   About
-                </Link>
+                </button>
               </li>
               <li>
                 <Link to="/journeys" className="hover:text-primary transition-colors">
@@ -28,14 +38,17 @@ export const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/" className="hover:text-primary transition-colors">
+                <Link to="/projects" className="hover:text-primary transition-colors">
                   Projects
                 </Link>
               </li>
               <li>
-                <Link to="/" className="hover:text-primary transition-colors">
+                <button 
+                  onClick={() => scrollToSection('join')}
+                  className="hover:text-primary transition-colors text-left"
+                >
                   Governance
-                </Link>
+                </button>
               </li>
             </ul>
           </div>
@@ -44,9 +57,9 @@ export const Footer = () => {
             <h4 className="font-medium mb-4">Resources</h4>
             <ul className="space-y-2 text-sm text-slate-300">
               <li>
-                <Link to="/" className="hover:text-primary transition-colors">
+                <a href="#" className="hover:text-primary transition-colors">
                   Documentation
-                </Link>
+                </a>
               </li>
               <li>
                 <Link to="/onboarding" className="hover:text-primary transition-colors">
@@ -54,12 +67,12 @@ export const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/" className="hover:text-primary transition-colors">
+                <a href="#" className="hover:text-primary transition-colors">
                   FAQ
-                </Link>
+                </a>
               </li>
               <li>
-                <Link to="/" className="hover:text-primary transition-colors">
+                <Link to="/journeys" className="hover:text-primary transition-colors">
                   Community
                 </Link>
               </li>
@@ -70,22 +83,22 @@ export const Footer = () => {
             <h4 className="font-medium mb-4">Connect</h4>
             <ul className="space-y-2 text-sm text-slate-300">
               <li>
-                <a href="#" className="hover:text-primary transition-colors">
+                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
                   Twitter
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-primary transition-colors">
+                <a href="https://discord.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
                   Discord
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-primary transition-colors">
+                <a href="https://telegram.org" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
                   Telegram
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-primary transition-colors">
+                <a href="https://medium.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
                   Medium
                 </a>
               </li>

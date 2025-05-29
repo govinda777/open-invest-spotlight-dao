@@ -13,6 +13,8 @@ import ProjectOwnerJourney from './pages/journeys/ProjectOwnerJourney';
 import DAOMemberJourney from './pages/journeys/DAOMemberJourney';
 import CommunityMemberJourney from './pages/journeys/CommunityMemberJourney';
 import JourneyMapper from './pages/journeys/JourneyMapper';
+import ProjectDetails from './pages/ProjectDetails';
+import AllProjects from './pages/AllProjects';
 
 function App() {
   return (
@@ -29,6 +31,8 @@ function App() {
             </main>
           } />
           <Route path="/onboarding" element={<Onboarding />} />
+          <Route path="/projects" element={<AllProjects />} />
+          <Route path="/project/:id" element={<ProjectDetails />} />
           <Route path="/journeys" element={<JourneysHub />} />
           <Route path="/journeys/investor" element={<InvestorJourney />} />
           <Route path="/journeys/project-owner" element={<ProjectOwnerJourney />} />
