@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["@playwright/test", "node"],
+    "module": "ESNext",
+    "target": "ESNext",
+    "moduleResolution": "node",
+    "esModuleInterop": true
+  },
+  "include": ["tests/**/*.ts", "e2e/**/*.ts"],
+  "exclude": ["node_modules"]
+} 

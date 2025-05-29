@@ -1,0 +1,148 @@
+name: E2E Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Debug Workflow Context
+      run: |
+        echo "Workflow Name: ${{ github.workflow }}"
+        echo "Run ID: ${{ github.run_id }}"
+        echo "Run Number: ${{ github.run_number }}"
+        echo "Actor: ${{ github.actor }}"
+        echo "Event Path: ${{ github.event_path }}"
+        echo "Repository: ${{ github.repository }}"
+        echo "Ref: ${{ github.ref }}"
+        echo "SHA: ${{ github.sha }}"
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+    
+    - name: Cache Playwright Browsers
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cache/ms-playwright
+          node_modules
+        key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-playwright-
+    
+    - name: Install Dependencies
+      run: |
+        echo "Starting dependency installation..."
+        for i in {1..3}; do
+          echo "Attempt $i: Installing dependencies..."
+          npm ci && break || {
+            echo "Attempt $i failed, waiting 10 seconds before retry..."
+            sleep 10
+          }
+        done
+        echo "Installing Playwright browsers..."
+        for i in {1..3}; do
+          echo "Attempt $i: Installing Playwright..."
+          npx playwright install --with-deps || true && break || {
+            echo "Attempt $i failed, waiting 10 seconds before retry..."
+            sleep 10
+          }
+        done
+        echo "Dependencies installed successfully"
+    
+    - name: Run E2E Tests
+      run: |
+        echo "Starting E2E test execution..."
+        for i in {1..3}; do
+          echo "Attempt $i: Running E2E tests..."
+          npm run test:e2e && break || {
+            echo "Attempt $i failed, waiting 10 seconds before retry..."
+            sleep 10
+          }
+        done
+        echo "E2E tests completed"
+    
+    - name: Install Allure Command Line
+      run: |
+        echo "Installing Allure CLI..."
+        for i in {1..3}; do
+          echo "Attempt $i: Installing Allure CLI..."
+          npm install -g allure-commandline && break || {
+            echo "Attempt $i failed, waiting 10 seconds before retry..."
+            sleep 10
+          }
+        done
+        echo "Allure CLI installed"
+    
+    - name: Generate Allure Report
+      run: |
+        echo "Generating Allure report..."
+        for i in {1..3}; do
+          echo "Attempt $i: Generating Allure report..."
+          npm run test:e2e:allure:generate && break || {
+            echo "Attempt $i failed, waiting 10 seconds before retry..."
+            sleep 10
+          }
+        done
+        echo "Allure report generated"
+    
+    - name: Upload Allure Report
+      uses: actions/upload-artifact@v4
+      with:
+        name: allure-report
+        path: allure-report/
+    
+    - name: Upload Playwright Report
+      uses: actions/upload-artifact@v4
+      with:
+        name: playwright-report
+        path: playwright-report/
+    
+    - name: Upload Test Results
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: test-results/
+
+    - name: Generate Test Coverage Badge
+      run: |
+        echo "Generating test coverage badge..."
+        for i in {1..3}; do
+          echo "Attempt $i: Generating coverage badge..."
+          echo "coverage=$(cat test-results/coverage.txt)" >> $GITHUB_OUTPUT && break || {
+            echo "Attempt $i failed, waiting 10 seconds before retry..."
+            sleep 10
+          }
+        done
+        echo "Coverage badge generated"
+      id: coverage
+
+    - name: Update README with Coverage
+      uses: EndBug/add-and-commit@v9
+      with:
+        author_name: 'GitHub Action'
+        author_email: 'action@github.com'
+        message: 'Update test coverage badge'
+        add: 'README.md'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Deploy to GitHub Pages
+      if: github.ref == 'refs/heads/main'
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./allure-report
+        publish_branch: gh-pages
+        force_orphan: true 

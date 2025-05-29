@@ -1,0 +1,108 @@
+name: Generate and Deploy Reports
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Debug Workflow Context
+        run: |
+          echo "Workflow Name: ${{ github.workflow }}"
+          echo "Run ID: ${{ github.run_id }}"
+          echo "Run Number: ${{ github.run_number }}"
+          echo "Actor: ${{ github.actor }}"
+          echo "Event Path: ${{ github.event_path }}"
+          echo "Triggered by: ${{ github.event_name }}"
+          echo "Repository: ${{ github.repository }}"
+          echo "Ref: ${{ github.ref }}"
+          echo "SHA: ${{ github.sha }}"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          echo "Starting dependency installation..."
+          for i in {1..3}; do
+            echo "Attempt $i: Installing dependencies..."
+            npm ci && break || {
+              echo "Attempt $i failed, waiting 10 seconds before retry..."
+              sleep 10
+            }
+          done
+          echo "Dependencies installed successfully"
+
+      - name: Run tests and generate reports
+        run: |
+          echo "Starting test execution..."
+          for i in {1..3}; do
+            echo "Attempt $i: Running tests..."
+            npm run test && break || {
+              echo "Attempt $i failed, waiting 10 seconds before retry..."
+              sleep 10
+            }
+          done
+          echo "Tests completed"
+          
+          echo "Generating Playwright report..."
+          for i in {1..3}; do
+            echo "Attempt $i: Generating Playwright report..."
+            npx playwright show-report && break || {
+              echo "Attempt $i failed, waiting 10 seconds before retry..."
+              sleep 10
+            }
+          done
+          echo "Playwright report generated"
+          
+          echo "Generating Allure report..."
+          for i in {1..3}; do
+            echo "Attempt $i: Generating Allure report..."
+            npx allure generate allure-results --clean && break || {
+              echo "Attempt $i failed, waiting 10 seconds before retry..."
+              sleep 10
+            }
+          done
+          echo "Allure report generated"
+          
+          echo "Opening Allure report..."
+          for i in {1..3}; do
+            echo "Attempt $i: Opening Allure report..."
+            npx allure open allure-report && break || {
+              echo "Attempt $i failed, waiting 10 seconds before retry..."
+              sleep 10
+            }
+          done
+          echo "Allure report opened"
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./playwright-report
+          destination_dir: playwright
+          commit_message: "Update Playwright Report"
+
+      - name: Deploy Allure Report
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./allure-report
+          destination_dir: allure
+          commit_message: "Update Allure Report"
+
+      - name: Deploy Index Page
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
+          commit_message: "Update Index Page" 

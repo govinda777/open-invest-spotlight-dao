@@ -1,0 +1,208 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20.x]
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Debug Repository Info
+      run: |
+        echo "Repository: ${{ github.repository }}"
+        echo "Ref: ${{ github.ref }}"
+        echo "SHA: ${{ github.sha }}"
+        echo "Event Name: ${{ github.event_name }}"
+        echo "Workflow: ${{ github.workflow }}"
+        echo "Run ID: ${{ github.run_id }}"
+    
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+    
+    - name: Install dependencies
+      run: |
+        echo "Installing dependencies..."
+        for i in {1..3}; do
+          echo "Attempt $i: Installing dependencies..."
+          npm ci && break || {
+            echo "Attempt $i failed, waiting 10 seconds before retry..."
+            sleep 10
+          }
+        done
+        echo "Dependencies installed successfully"
+    
+    - name: Run unit tests
+      run: |
+        echo "Starting unit tests..."
+        for i in {1..3}; do
+          echo "Attempt $i: Running unit tests..."
+          npm run test:unit:coverage && break || {
+            echo "Attempt $i failed, waiting 10 seconds before retry..."
+            sleep 10
+          }
+        done
+        echo "Unit tests completed"
+    
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: coverage/
+    
+    - name: Update coverage badge
+      uses: coverallsapp/github-action@v2
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  e2e-tests:
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    strategy:
+      matrix:
+        node-version: [20.x]
+        browser: [chromium, firefox, webkit]
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Debug Environment
+      run: |
+        echo "Node Version: ${{ matrix.node-version }}"
+        echo "Browser: ${{ matrix.browser }}"
+        echo "Runner OS: ${{ runner.os }}"
+        echo "Runner Temp: ${{ runner.temp }}"
+        echo "Workflow: ${{ github.workflow }}"
+        echo "Run ID: ${{ github.run_id }}"
+    
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    
+    - name: Cache Playwright browsers
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/ms-playwright
+        key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-playwright-
+    
+    - name: Install dependencies
+      run: |
+        echo "Installing project dependencies..."
+        for i in {1..3}; do
+          echo "Attempt $i: Installing dependencies..."
+          npm ci && break || {
+            echo "Attempt $i failed, waiting 10 seconds before retry..."
+            sleep 10
+          }
+        done
+        echo "Project dependencies installed"
+    
+    - name: Install Playwright browsers
+      run: |
+        echo "Installing Playwright browser: ${{ matrix.browser }}"
+        for i in {1..3}; do
+          echo "Attempt $i: Installing Playwright browser..."
+          npx playwright install ${{ matrix.browser }} --with-deps && break || {
+            echo "Attempt $i failed, waiting 10 seconds before retry..."
+            sleep 10
+          }
+        done
+        echo "Playwright browser installed"
+    
+    - name: Run E2E tests
+      run: |
+        echo "Starting E2E tests for ${{ matrix.browser }}..."
+        for i in {1..3}; do
+          echo "Attempt $i: Running E2E tests..."
+          npm run test:e2e:ci -- --project=${{ matrix.browser }} && break || {
+            echo "Attempt $i failed, waiting 10 seconds before retry..."
+            sleep 10
+          }
+        done
+        echo "E2E tests completed"
+    
+    - name: Generate Allure Report
+      if: always()
+      run: |
+        echo "Generating Allure report..."
+        for i in {1..3}; do
+          echo "Attempt $i: Generating Allure report..."
+          npm run test:e2e:allure:generate && break || {
+            echo "Attempt $i failed, waiting 10 seconds before retry..."
+            sleep 10
+          }
+        done
+        echo "Allure report generated"
+    
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results-${{ matrix.browser }}
+        path: |
+          allure-results/
+          playwright-report/
+    
+    - name: Deploy Allure Report
+      if: always()
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./allure-report
+    
+    - name: Run Security Scan
+      uses: snyk/actions/node@master
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+    
+    - name: Dependency Check
+      uses: dependency-check/Dependency-Check_Action@main
+      with:
+        project: 'open-invest-spotlight-dao'
+        path: '.'
+        format: 'HTML'
+    
+    - name: Run Compliance Check
+      uses: github/super-linter@v4
+      env:
+        VALIDATE_ALL_CODEBASE: true
+        DEFAULT_BRANCH: main
+    
+    - name: Performance Test
+      run: |
+        echo "Starting performance test..."
+        for i in {1..3}; do
+          echo "Attempt $i: Running performance test..."
+          npm install -g autocannon && break || {
+            echo "Attempt $i failed, waiting 10 seconds before retry..."
+            sleep 10
+          }
+        done
+        autocannon -c 10 -d 60 -r 1000 http://localhost:3000
+        echo "Performance test completed" 

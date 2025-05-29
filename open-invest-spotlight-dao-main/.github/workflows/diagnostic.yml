@@ -1,0 +1,71 @@
+name: Diagnostic Workflow
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */6 * * *'  # Runs every 6 hours
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Repository Access
+        run: |
+          echo "Checking repository access..."
+          curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          https://api.github.com/repos/${{ github.repository }}/actions/runs \
+          | jq '.workflow_runs[0]'
+          echo "Repository access check completed"
+
+      - name: Check Actions Permissions
+        run: |
+          echo "Checking Actions permissions..."
+          curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          https://api.github.com/repos/${{ github.repository }}/actions/permissions \
+          | jq '.'
+          echo "Actions permissions check completed"
+
+      - name: Check Rate Limits
+        run: |
+          echo "Checking rate limits..."
+          curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          https://api.github.com/rate_limit \
+          | jq '.'
+          echo "Rate limits check completed"
+
+      - name: Check Workflow Files
+        run: |
+          echo "Checking workflow files..."
+          ls -la .github/workflows/
+          echo "Workflow files check completed"
+
+      - name: Check Environment Variables
+        run: |
+          echo "Checking environment variables..."
+          echo "GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN != '' }}"
+          echo "SNYK_TOKEN: ${{ secrets.SNYK_TOKEN != '' }}"
+          echo "Environment variables check completed"
+
+      - name: Generate Diagnostic Report
+        run: |
+          echo "Generating diagnostic report..."
+          echo "## Diagnostic Report" > diagnostic.md
+          echo "### Repository Information" >> diagnostic.md
+          echo "- Repository: ${{ github.repository }}" >> diagnostic.md
+          echo "- Branch: ${{ github.ref }}" >> diagnostic.md
+          echo "- SHA: ${{ github.sha }}" >> diagnostic.md
+          echo "### Workflow Information" >> diagnostic.md
+          echo "- Workflow: ${{ github.workflow }}" >> diagnostic.md
+          echo "- Run ID: ${{ github.run_id }}" >> diagnostic.md
+          echo "- Run Number: ${{ github.run_number }}" >> diagnostic.md
+          echo "### Environment" >> diagnostic.md
+          echo "- Runner OS: ${{ runner.os }}" >> diagnostic.md
+          echo "- Node Version: $(node -v)" >> diagnostic.md
+          echo "- NPM Version: $(npm -v)" >> diagnostic.md
+          echo "Diagnostic report generated"
+
+      - name: Upload Diagnostic Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: diagnostic-report
+          path: diagnostic.md 
