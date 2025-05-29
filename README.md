@@ -1,5 +1,5 @@
 # 🚀 Open Invest Spotlight DAO
-
+ 
 <div align="center">
     <img src="public/banner.svg" alt="Open Invest Spotlight DAO Banner" width="100%"/>
 </div>
